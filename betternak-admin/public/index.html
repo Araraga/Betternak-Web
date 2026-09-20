@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Betternak Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-panel { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-input { background: rgba(2, 6, 23, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
+    .glass-input:focus { border-color: #10b981; outline: none; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25); }
+    .tab-btn.active { background-color: rgba(16, 185, 129, 0.18); color: #34d399; border-color: rgba(16, 185, 129, 0.4); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
+    <div class="glass-panel w-full max-w-md p-8 rounded-2xl shadow-2xl border border-emerald-500/20 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-3xl">🌿</div>
+      <h2 class="text-2xl font-bold font-display text-white mb-2">Betternak Admin</h2>
+      <p class="text-sm text-slate-400 mb-6">Kelola seluruh teks, fitur, gambar, dan aset 3D IoPakan.</p>
+      <form id="loginForm" class="space-y-4">
+        <div><input type="password" id="loginPassword" placeholder="Password Admin (Default: betternak2026)" required class="w-full px-4 py-3 rounded-xl glass-input text-sm text-center"></div>
+        <button type="submit" id="loginSubmitBtn" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition-all">Masuk ke Panel</button>
+        <p id="loginError" class="text-xs text-rose-400 hidden">Password salah! Silakan coba lagi.</p>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toastInner" class="flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl border border-emerald-500/30 bg-slate-900/95 text-emerald-400 text-sm font-semibold">
+      <span id="toastIcon">✓</span><span id="toastMsg">Perubahan berhasil disimpan!</span>
+    </div>
+  </div>
+
+  <header class="sticky top-0 z-40 glass-panel border-b border-white/10 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-xl shadow-md">🌱</div>
+      <div>
+        <h1 class="text-lg font-bold font-display tracking-tight text-white flex items-center gap-2">
+          Betternak <span class="text-emerald-400 text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">Admin Panel</span>
+        </h1>
+        <p class="text-xs text-slate-400">Content &amp; Asset Management</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/betternak/" id="viewSiteLink" target="_blank" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 transition-all">↗ Buka Website</a>
+      <button id="saveAllBtn" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
+        <span>💾 Simpan Semua</span>
+      </button>
+      <button id="logoutBtn" title="Logout" class="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 text-xs transition-colors">🚪</button>
+    </div>
+  </header>
+
+  <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+    <aside class="w-full md:w-64 glass-panel border-r border-white/10 p-4 space-y-1 shrink-0 overflow-y-auto">
+      <div class="text-[10px] font-mono tracking-widest text-slate-500 uppercase px-3 mb-2 font-bold">Menu Konten</div>
+      <button class="tab-btn active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-white/5 transition-all text-left" data-tab="tab-hero">⚡ Hero &amp; Brand</button>
+      <button class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-white/5 transition-all text-left" data-tab="tab-cards">📑 Fitur &amp; Story Cards</button>
+      <button class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-white/5 transition-all text-left" data-tab="tab-gallery">🖼️ Galeri Dokumentasi</button>
+      <button class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-white/5 transition-all text-left" data-tab="tab-specs">⚙️ Spesifikasi Teknis</button>
+      <button class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-white/5 transition-all text-left" data-tab="tab-contact">💬 Kontak &amp; WhatsApp</button>
+      <button class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-white/5 transition-all text-left" data-tab="tab-media">📁 Upload Media / Aset</button>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-8 overflow-y-auto bg-slate-950" id="tabContentWrapper">
+      <div id="tabsContainer" class="max-w-5xl mx-auto space-y-8"></div>
+    </main>
+  </div>
+
+  <script src="/admin-tabs.js"></script>
+  <script src="/admin.js"></script>
+</body>
+</html>

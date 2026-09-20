@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>betternak &bull; IoPakan 2026 Smart Feeder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+
+  <!-- Cinematic Ambient Background Glow & Tech Animated Lines -->
+  <div class="cinema-ambient-glow"></div>
+  <div class="cinema-lines-bg">
+    <div class="tech-grid-pattern"></div>
+    <svg class="cyber-laser-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Emerald to Cyan horizontal wave gradient -->
+        <linearGradient id="laserGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0" />
+          <stop offset="25%" stop-color="#10b981" stop-opacity="0.45" />
+          <stop offset="70%" stop-color="#38bdf8" stop-opacity="0.55" />
+          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+        </linearGradient>
+
+        <!-- Vertical scanline gradient -->
+        <linearGradient id="laserGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0" />
+          <stop offset="50%" stop-color="#10b981" stop-opacity="0.4" />
+          <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
+        </linearGradient>
+
+        <!-- Violet to Emerald gradient for dynamic resonance -->
+        <linearGradient id="laserGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#a855f7" stop-opacity="0" />
+          <stop offset="30%" stop-color="#a855f7" stop-opacity="0.35" />
+          <stop offset="75%" stop-color="#10b981" stop-opacity="0.45" />
+          <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
+        </linearGradient>
+
+        <!-- Amber to Cyan accent gradient -->
+        <linearGradient id="laserGrad4" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0" />
+          <stop offset="40%" stop-color="#f59e0b" stop-opacity="0.4" />
+          <stop offset="70%" stop-color="#06b6d4" stop-opacity="0.45" />
+          <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
+        </linearGradient>
+
+        <!-- Glow filter for lasers -->
+        <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- 1. Multi-tier animated flowing cyber wave lines -->
+      <path class="cyber-laser-line line-flow-1" d="M -100,160 Q 420,60 920,180 T 1940,110 T 2500,170" stroke="url(#laserGrad1)" fill="none" stroke-width="1.8" filter="url(#laserGlow)" />
+      <path class="cyber-laser-line line-flow-2" d="M -150,340 Q 520,220 1050,360 T 2050,280 T 2600,350" stroke="url(#laserGrad3)" fill="none" stroke-width="1.6" />
+      <path class="cyber-laser-line line-flow-3" d="M -100,640 Q 480,500 1100,660 T 2120,580 T 2700,650" stroke="url(#laserGrad1)" fill="none" stroke-width="1.5" />
+      <path class="cyber-laser-line line-flow-4" d="M -200,860 Q 600,740 1200,880 T 2200,810 T 2800,870" stroke="url(#laserGrad4)" fill="none" stroke-width="1.6" filter="url(#laserGlow)" />
+      
+      <!-- 2. Diagonal telemetry beams -->
+      <line class="cyber-diag-line line-diag-1" x1="-100" y1="80" x2="2100" y2="920" stroke="url(#laserGrad3)" stroke-width="1.2" stroke-dasharray="140 280" />
+      <line class="cyber-diag-line line-diag-2" x1="-100" y1="850" x2="2100" y2="120" stroke="url(#laserGrad4)" stroke-width="1.2" stroke-dasharray="160 300" />
+
+      <!-- 3. Vertical telemetry coordinate scanlines -->
+      <line class="cyber-scanline scanline-1" x1="14%" y1="0" x2="14%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="6 6" />
+      <line class="cyber-scanline scanline-2" x1="33%" y1="0" x2="33%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="8 8" />
+      <line class="cyber-scanline scanline-3" x1="67%" y1="0" x2="67%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="8 8" />
+      <line class="cyber-scanline scanline-4" x1="86%" y1="0" x2="86%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="6 6" />
+
+      <!-- 4. Horizontal datum reference guides -->
+      <line class="cyber-datum datum-1" x1="0" y1="260" x2="100%" y2="260" stroke="rgba(56,189,248,0.12)" stroke-width="1" stroke-dasharray="4 12" />
+      <line class="cyber-datum datum-2" x1="0" y1="540" x2="100%" y2="540" stroke="rgba(16,185,129,0.12)" stroke-width="1" stroke-dasharray="4 12" />
+      <line class="cyber-datum datum-3" x1="0" y1="820" x2="100%" y2="820" stroke="rgba(168,85,247,0.12)" stroke-width="1" stroke-dasharray="4 12" />
+
+      <!-- 5. Rotating Tech Radar Circles / Reticle Rings in Corners -->
+      <g class="tech-radar-reticle reticle-tr" transform="translate(1820, 100)">
+        <circle r="64" fill="none" stroke="rgba(16,185,129,0.18)" stroke-width="1" stroke-dasharray="8 12" />
+        <circle r="36" fill="none" stroke="rgba(56,189,248,0.22)" stroke-width="1" stroke-dasharray="4 6" />
+        <line x1="-74" y1="0" x2="74" y2="0" stroke="rgba(16,185,129,0.2)" stroke-width="1" />
+        <line x1="0" y1="-74" x2="0" y2="74" stroke="rgba(16,185,129,0.2)" stroke-width="1" />
+      </g>
+      <g class="tech-radar-reticle reticle-bl" transform="translate(100, 980)">
+        <circle r="72" fill="none" stroke="rgba(56,189,248,0.18)" stroke-width="1" stroke-dasharray="10 14" />
+        <circle r="42" fill="none" stroke="rgba(168,85,247,0.2)" stroke-width="1" stroke-dasharray="5 7" />
+        <line x1="-80" y1="0" x2="80" y2="0" stroke="rgba(56,189,248,0.2)" stroke-width="1" />
+        <line x1="0" y1="-80" x2="0" y2="80" stroke="rgba(56,189,248,0.2)" stroke-width="1" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- 3D Three.js WebGL Container -->
+  <div id="webgl-canvas-container"></div>
+
+  <!-- 10kg Animated Dimension Line Overlay (Active in Chapter 2) -->
+  <div id="silo-dim-overlay" class="silo-dimension-container pointer-events-none">
+    <svg id="silo-dim-svg" class="silo-dimension-svg">
+      <defs>
+        <filter id="glow-dim" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <!-- Background glowing laser beam (solid emerald to guarantee zero-width line rendering) -->
+      <line id="dim-line-bg" x1="0" y1="0" x2="0" y2="0" stroke="#10b981" stroke-width="4.5" stroke-opacity="0.45" stroke-linecap="round" filter="url(#glow-dim)" />
+      <!-- Animated vertical measurement line from top of silo to bottom -->
+      <line id="dim-line-main" x1="0" y1="0" x2="0" y2="0" stroke="#34d399" stroke-width="2.5" stroke-dasharray="8 5" stroke-linecap="round" />
+      <!-- Top bracket tick -->
+      <line id="dim-tick-top" x1="0" y1="0" x2="26" y2="0" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" />
+      <!-- Bottom bracket tick -->
+      <line id="dim-tick-bottom" x1="0" y1="0" x2="26" y2="0" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" />
+      <!-- Anchor dots -->
+      <circle id="dim-point-top" cx="0" cy="0" r="4" fill="#34d399" />
+      <circle id="dim-point-bottom" cx="0" cy="0" r="4" fill="#10b981" />
+    </svg>
+
+    <!-- Floating 10kg Badge Label beside the line -->
+    <div id="silo-dim-label" class="silo-dim-badge">
+      <div class="dim-badge-inner">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-[10px] uppercase font-mono font-bold text-emerald-400 tracking-wider">Kapasitas Silo</span>
+        </div>
+        <div class="text-2xl md:text-3xl font-black font-display text-white tracking-tight leading-none mt-1.5 flex items-baseline gap-1">
+          <span id="dim-weight-num">10.0</span><span class="text-emerald-400 text-base font-bold">kg</span>
+        </div>
+        <div class="text-[11px] text-slate-300 font-medium mt-1 whitespace-nowrap">
+          Cukup Suplai Pakan 5-7 Hari
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div id="loader-overlay">
+    <div class="spinner-ring mb-4"></div>
+    <div class="font-display text-xl font-bold tracking-tight text-white flex items-center gap-2">
+      betternak <span class="text-emerald-400">&bull;</span> IoPakan
+    </div>
+    <p class="text-xs text-slate-400 mt-1 font-medium tracking-wide" id="loader-text">Memuat Model 3D Presisi CAD...</p>
+    <div class="w-44 h-1.5 bg-white/10 rounded-full mt-3 overflow-hidden">
+      <div id="loader-bar" class="h-full bg-emerald-400 w-0 transition-all duration-300"></div>
+    </div>
+  </div>
+
+  <!-- Progress Indicator Dots (Left Edge) -->
+  <div class="chapter-dots">
+    <div class="chapter-dot" data-chapter="0" title="Presisi Pakan"></div>
+    <div class="chapter-dot" data-chapter="1" title="Anatomi 8 Part"></div>
+    <div class="chapter-dot" data-chapter="2" title="Silo 10kg"></div>
+    <div class="chapter-dot" data-chapter="3" title="Modular Kaki"></div>
+    <div class="chapter-dot" data-chapter="4" title="Galeri Nyata"></div>
+    <div class="chapter-dot" data-chapter="5" title="Kendali Presisi"></div>
+  </div>
+
+  <!-- Virtual Scroll Track (Hardware 3D Narrative) -->
+  <div id="story-scroll-track"></div>
+
+  <!-- DYNAMIC POSITIONED NARRATIVE CARDS CONTAINER (Fixed, isolated to hardware track) -->
+  <div id="story-cards-container" class="story-cards-container">
+
+  <!-- CARD 0: HERO OVERVIEW (DI BAWAH IOPAKAN, LOGO BETTERNAK SEDANG DI ATAS, TANPA KOTAKAN) -->
+  <div class="story-card card-pos-hero card-theme-hero" id="card-0">
+    <div class="max-w-4xl mx-auto text-center px-4 pointer-events-auto flex flex-col items-center">
+      <!-- Logo Betternak (Ukuran Lebih Besar & Elegan di Atas Judul) -->
+      <div class="mb-4 sm:mb-6 flex justify-center">
+        <img 
+          src="/asset/logoteksbetternak.png" 
+          alt="Betternak Logo" 
+          class="h-14 sm:h-20 md:h-24 lg:h-28 w-auto object-contain mx-auto drop-shadow-[0_8px_32px_rgba(16,185,129,0.5)] brightness-110 transition-all duration-300"
+        />
+      </div>
+      <h1 class="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.15] mb-3 drop-shadow-[0_12px_45px_rgba(0,0,0,0.9)]">
+        Presisi Pakan di Setiap Butir.
+      </h1>
+      <p class="text-slate-200/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-2 font-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+        IoPakan merevolusi pemberian pakan ternak. Rekayasa aerodinamis gravitasi terukur, kapasitas 10kg, dan pemantauan IoT cerdas langsung dari ponsel Anda.
+      </p>
+    </div>
+  </div>
+
+  <!-- CARD 1: EXPLODED ANATOMY (KANAN - CYAN ACCENT, TANPA KOTAKAN) -->
+  <div class="story-card card-pos-right card-theme-blueprint" id="card-1">
+    <div class="story-text-wrap max-w-lg pointer-events-auto">
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-3 leading-tight">
+        Anatomi 8 Komponen Terurai
+      </h2>
+      <div class="story-accent-line bg-gradient-to-r from-sky-400 via-cyan-300 to-transparent"></div>
+      <p class="text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+        Setiap layer dirancang saling mengunci presisi sub-milimeter. Terurai vertikal menyingkap arsitektur mekanikal kokoh dan modular di baliknya.
+      </p>
+    </div>
+  </div>
+
+  <!-- CARD 2: 10KG PAKAN & POTONGAN MELINTANG (KIRI - AMBER ACCENT, TANPA KOTAKAN) -->
+  <div class="story-card card-pos-left card-theme-silo" id="card-2">
+    <div class="story-text-wrap max-w-lg pointer-events-auto">
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-3 leading-tight">
+        10kg Pakan, Bebas Khawatir
+      </h2>
+      <div class="story-accent-line bg-gradient-to-r from-amber-400 via-yellow-300 to-transparent"></div>
+      <p class="text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+        Ruang tampung 10kg sanggup menyuplai ratusan ayam berhari-hari. Di dalamnya bekerja deflektor piramida 45&deg; anti-gumpal dan piringan dosing presisi.
+      </p>
+    </div>
+  </div>
+
+  <!-- CARD ANTI: MEKANISME DEFLEKTOR & MANGKUK (ANTI BERANTAKAN -> ANTI RIBET -> ANTI TUMPAH, TANPA KOTAKAN) -->
+  <div class="story-card card-pos-left card-theme-silo" id="card-anti">
+    <div class="story-text-wrap max-w-lg pointer-events-auto">
+      <h2 class="font-display text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white mb-2.5 flex items-center gap-3 leading-none">
+        <span class="inline-block leading-none">Anti</span>
+        <span class="morph-word-container relative inline-grid place-items-start leading-none min-w-[240px] sm:min-w-[320px]">
+          <span id="word-berantakan" class="morph-word-item text-[#22c55e] font-black leading-none">Berantakan.</span>
+          <span id="word-ribet" class="morph-word-item text-[#22c55e] font-black leading-none">Ribet.</span>
+          <span id="word-tumpah" class="morph-word-item text-[#22c55e] font-black leading-none">Tumpah.</span>
+        </span>
+      </h2>
+      <div id="morph-accent-line" class="story-accent-line bg-gradient-to-r from-[#22c55e] via-[#10b981] to-transparent"></div>
+      <div class="morph-desc-container relative min-h-[75px] sm:min-h-[85px]">
+        <p id="desc-berantakan" class="morph-desc-item text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+          Piramida deflektor 360&deg; membagi butiran pakan merata ke sekeliling mangkuk tanpa bertumpuk di satu sisi.
+        </p>
+        <p id="desc-ribet" class="morph-desc-item text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+          Pemberian pakan terotomasi presisi dari smartphone Anda—tanpa repot menakar dan mengontrol manual setiap hari.
+        </p>
+        <p id="desc-tumpah" class="morph-desc-item text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+          Piringan dosing presisi berputar menyalurkan pelet bertahap melalui 5 lubang CAD menuju mangkuk pakan tanpa tercecer ke lantai kandang.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: MODULAR LEGS (KANAN - VIOLET ACCENT, TANPA KOTAKAN) -->
+  <div class="story-card card-pos-right card-theme-modular" id="card-3">
+    <div class="story-text-wrap max-w-lg pointer-events-auto">
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-3 leading-tight">
+        Dari Bibit DOC Hingga Panen
+      </h2>
+      <div class="story-accent-line bg-gradient-to-r from-purple-400 via-pink-400 to-transparent"></div>
+      <p class="text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed mb-5 font-normal">
+        Kaki tripod modular copot otomatis saat di-scroll, menurunkan bodi IoPakan langsung ke lantai untuk anak ayam DOC usia 0–14 hari (40 cm). Pasang kembali saat dewasa (57 cm) untuk menjauhkan pakan dari kotoran sekam.
+      </p>
+      <div class="story-interactive-row flex items-center gap-2.5">
+        <button id="btn-mode-doc" class="btn-clean-pill">Ayam Kecil (40 cm)</button>
+        <button id="btn-mode-adult" class="btn-clean-pill active">Ayam Dewasa (57 cm)</button>
+      </div>
+    </div>
+  </div>
+
+  </div> <!-- /story-cards-container -->
+
+  <!-- GALLERY SECTION: HORIZONTAL PINNED SCROLL WITH REAL ASSET PHOTOS & ANIMATED OIL LINES -->
+  <section id="gallery-pin-container" class="gallery-pin-container">
+    <!-- Animated Iridescent Oil Contour Lines Overlay -->
+    <div class="gallery-oil-bg pointer-events-none">
+      <svg class="gallery-oil-svg" width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="oilGradEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.32" />
+            <stop offset="35%" stop-color="#06b6d4" stop-opacity="0.28" />
+            <stop offset="70%" stop-color="#8b5cf6" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.3" />
+          </linearGradient>
+          <linearGradient id="oilGradCyan" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.3" />
+            <stop offset="50%" stop-color="#10b981" stop-opacity="0.25" />
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.22" />
+          </linearGradient>
+          <linearGradient id="oilGradAmber" x1="0%" y1="50%" x2="100%" y2="50%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25" />
+            <stop offset="50%" stop-color="#ec4899" stop-opacity="0.2" />
+            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.25" />
+          </linearGradient>
+          <filter id="oilGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <path class="oil-contour-line oil-line-1" d="M -100,120 C 350,40 700,220 1150,110 C 1500,20 1750,180 2100,90" fill="none" stroke="url(#oilGradEmerald)" stroke-width="2.2" filter="url(#oilGlow)" />
+        <path class="oil-contour-line oil-line-2" d="M -150,280 C 400,160 820,380 1280,240 C 1620,130 1850,310 2150,220" fill="none" stroke="url(#oilGradCyan)" stroke-width="2.0" />
+        <path class="oil-contour-line oil-line-3" d="M -120,460 C 320,310 760,560 1200,410 C 1580,280 1820,470 2120,380" fill="none" stroke="url(#oilGradAmber)" stroke-width="2.2" />
+        <path class="oil-contour-line oil-line-4" d="M -100,640 C 450,520 890,720 1350,580 C 1700,460 1900,630 2200,550" fill="none" stroke="url(#oilGradEmerald)" stroke-width="2.0" filter="url(#oilGlow)" />
+        <path class="oil-contour-line oil-line-5" d="M -150,820 C 380,680 840,910 1310,760 C 1680,640 1860,820 2180,740" fill="none" stroke="url(#oilGradCyan)" stroke-width="2.2" />
+        <path class="oil-contour-line oil-line-6" d="M -100,960 C 420,840 880,1040 1380,900 C 1720,790 1920,950 2220,890" fill="none" stroke="url(#oilGradAmber)" stroke-width="1.8" />
+      </svg>
+    </div>
+
+    <div class="gallery-sticky-viewport">
+      <!-- Crossfade Background Layers: Seamlessly matches dark cinema then transitions to ivory white (#f8fafc) -->
+      <div class="gallery-bg-dark pointer-events-none"></div>
+      <div id="gallery-bg-light" class="gallery-bg-light pointer-events-none"></div>
+
+      <div id="gallery-track" class="gallery-track">
+        
+        <!-- INTRO BLOCK -->
+        <div class="gallery-intro-card gallery-kinetic-text in-view">
+          <div class="gallery-intro-badge">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Dokumentasi Riset &amp; Perakitan
+          </div>
+          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 leading-[1.1] mt-3 mb-2">
+            Galeri Nyata <br/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600">IoPakan</span>
+          </h2>
+          <div class="gallery-reveal-line"></div>
+          <p class="text-slate-600 text-sm md:text-base leading-relaxed max-w-sm mb-6">
+            Hasil dokumentasi nyata dari tahap perakitan presisi, uji mekanisme dosing, hingga implementasi di kandang ayam peternak mitra.
+          </p>
+          <div class="flex items-center gap-3 text-xs font-mono text-emerald-600 uppercase tracking-widest font-semibold">
+            <span>Scroll Untuk Jelajahi</span>
+            <svg class="w-4 h-4 animate-bounce-x" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </div>
+        </div>
+
+        <!-- PHOTO 1: TALL PORTRAIT (gallery-1.jpg) -->
+        <div class="gallery-item item-size-tall-1">
+          <div class="gallery-photo-frame">
+            <img src="/asset/gallery-1.jpg" alt="Perakitan Silo IoPakan" class="gallery-img" loading="lazy" />
+            <div class="gallery-overlay-vignette"></div>
+            <div class="gallery-caption-clean gallery-kinetic-text">
+              <div class="gallery-num">01</div>
+              <div class="gallery-info">
+                <span class="gallery-tag">Fabrikasi &amp; Perakitan</span>
+                <h4 class="gallery-title">Konstruksi Silo 10KG</h4>
+                <div class="gallery-reveal-line"></div>
+                <p class="gallery-desc">Material polimer tahan benturan dengan kerapatan sambungan anti-air kandang.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHOTO 2: LOW OFFSET PORTRAIT (gallery-2.jpg) -->
+        <div class="gallery-item item-size-portrait-low">
+          <div class="gallery-photo-frame">
+            <img src="/asset/gallery-2.jpg" alt="Detail Mekanik IoPakan" class="gallery-img" loading="lazy" />
+            <div class="gallery-overlay-vignette"></div>
+            <div class="gallery-caption-clean gallery-kinetic-text">
+              <div class="gallery-num">02</div>
+              <div class="gallery-info">
+                <span class="gallery-tag">Mekanisme Presisi</span>
+                <h4 class="gallery-title">Kalibrasi Piringan Dosing</h4>
+                <div class="gallery-reveal-line"></div>
+                <p class="gallery-desc">Toleransi putar sub-milimeter menjaga butir pakan utuh tidak remuk.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIDE GAP WITH FLOATING QUOTE CALLOUT (NO BOX, PURE TYPOGRAPHY WITH KINETIC ENTRANCE) -->
+        <div class="gallery-interlude-quote gallery-kinetic-text">
+          <div class="quote-symbol">&ldquo;</div>
+          <p class="quote-text">
+            Pemberian pakan konsisten setiap jam menghasilkan bobot panen seragam dan FCR yang jauh lebih efisien.
+          </p>
+          <div class="gallery-reveal-line"></div>
+          <span class="quote-author">&mdash; Riset Lapangan Betternak 2026</span>
+        </div>
+
+        <!-- PHOTO 3: HIGH OFFSET PORTRAIT (gallery-3.jpg) -->
+        <div class="gallery-item item-size-portrait-high">
+          <div class="gallery-photo-frame">
+            <img src="/asset/gallery-3.jpg" alt="Uji Komponen IoPakan" class="gallery-img" loading="lazy" />
+            <div class="gallery-overlay-vignette"></div>
+            <div class="gallery-caption-clean gallery-kinetic-text">
+              <div class="gallery-num">03</div>
+              <div class="gallery-info">
+                <span class="gallery-tag">Struktur Modular</span>
+                <h4 class="gallery-title">Kaki Tripod Adaptif</h4>
+                <div class="gallery-reveal-line"></div>
+                <p class="gallery-desc">Dukungan beban hingga 25kg dengan ground grip kokoh di lantai kandang sekam.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHOTO 4: WIDE LANDSCAPE (gallery-4.jpg) -->
+        <div class="gallery-item item-size-landscape-wide">
+          <div class="gallery-photo-frame">
+            <img src="/asset/gallery-4.jpg" alt="Uji Sebaran Pakan" class="gallery-img" loading="lazy" />
+            <div class="gallery-overlay-vignette"></div>
+            <div class="gallery-caption-clean gallery-kinetic-text">
+              <div class="gallery-num">04</div>
+              <div class="gallery-info">
+                <span class="gallery-tag">Uji Laboratorium</span>
+                <h4 class="gallery-title">Aliran Bebas Gumpal 360&deg;</h4>
+                <div class="gallery-reveal-line"></div>
+                <p class="gallery-desc">Piramida deflektor mengalirkan pakan merata tanpa ada ayam terdesak.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DRAMATIC GAP WITH STATISTIC CALLOUT (NO BOX, PURE TYPOGRAPHY WITH KINETIC ENTRANCE) -->
+        <div class="gallery-interlude-stat gallery-kinetic-text">
+          <div class="stat-number">99.4%</div>
+          <div class="gallery-reveal-line"></div>
+          <div class="stat-label">Akurasi Dosis Gram Pakan</div>
+          <div class="stat-sub">Mencegah pakan terbuang sia-sia akibat over-feeding di peternakan ayam.</div>
+        </div>
+
+        <!-- PHOTO 5: CINEMATIC PANORAMA (gallery-5.jpg) -->
+        <div class="gallery-item item-size-cinematic">
+          <div class="gallery-photo-frame">
+            <img src="/asset/gallery-5.jpg" alt="Implementasi Kandang Peternak" class="gallery-img" loading="lazy" />
+            <div class="gallery-overlay-vignette"></div>
+            <div class="gallery-caption-clean gallery-kinetic-text">
+              <div class="gallery-num">05</div>
+              <div class="gallery-info">
+                <span class="gallery-tag">Implementasi Mitra</span>
+                <h4 class="gallery-title">Uji Lapangan Kandang Broiler</h4>
+                <div class="gallery-reveal-line"></div>
+                <p class="gallery-desc">Teruji beroperasi handal 24/7 di kandang ayam broiler berpopulasi ribuan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHOTO 6: TALL HERO (gallery-6.jpg) -->
+        <div class="gallery-item item-size-tall-end">
+          <div class="gallery-photo-frame">
+            <img src="/asset/gallery-6.jpg" alt="Batch Produksi Siap Kirim" class="gallery-img" loading="lazy" />
+            <div class="gallery-overlay-vignette"></div>
+            <div class="gallery-caption-clean gallery-kinetic-text">
+              <div class="gallery-num">06</div>
+              <div class="gallery-info">
+                <span class="gallery-tag">Final Quality Check</span>
+                <h4 class="gallery-title">Unit Siap Distribusi</h4>
+                <div class="gallery-reveal-line"></div>
+                <p class="gallery-desc">Setiap unit melewati uji kalibrasi motor, timbangan sensor, dan modul IoT.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTRO / NEXT INDICATOR (NO BOX, PURE TYPOGRAPHY WITH KINETIC ENTRANCE) -->
+        <div class="gallery-outro-card gallery-kinetic-text">
+          <div class="text-xs font-mono uppercase tracking-widest text-emerald-600 font-bold mb-2">Eksplorasi Lanjut</div>
+          <h3 class="text-2xl md:text-3xl font-bold font-display text-slate-900 mb-2">Kendali Presisi Smartphone</h3>
+          <div class="gallery-reveal-line"></div>
+          <p class="text-slate-600 text-sm mb-6 max-w-xs leading-relaxed">
+            Scroll ke bawah untuk melihat antarmuka kendali smartphone &amp; sinkronisasi unit IoPakan secara real-time.
+          </p>
+          <div class="flex items-center gap-2 text-xs font-mono text-emerald-600 uppercase tracking-wider font-bold">
+            <span>Scroll Menuju Kendali Presisi</span>
+            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: KENDALI PRESISI (SMARTPHONE IOT & HARDWARE COMPANION SHOWCASE) -->
+  <section id="smart-control-section" class="smart-control-section relative z-20 min-h-screen py-24 md:py-32 px-4 sm:px-6 lg:px-12 flex flex-col justify-center overflow-hidden">
+    
+    <!-- Animated Iridescent Ambient Waves & Glowing Contour Lines continuing from Gallery -->
+    <div class="smart-ambient-bg pointer-events-none">
+      <svg class="smart-ambient-svg" viewBox="0 0 1920 1080" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="smartOilEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.30" />
+            <stop offset="35%" stop-color="#06b6d4" stop-opacity="0.25" />
+            <stop offset="70%" stop-color="#3b82f6" stop-opacity="0.20" />
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.28" />
+          </linearGradient>
+          <linearGradient id="smartOilCyan" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.28" />
+            <stop offset="50%" stop-color="#10b981" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.18" />
+          </linearGradient>
+          <linearGradient id="smartOilAmber" x1="0%" y1="50%" x2="100%" y2="50%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.22" />
+            <stop offset="50%" stop-color="#10b981" stop-opacity="0.18" />
+            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.22" />
+          </linearGradient>
+        </defs>
+        <path class="oil-contour-line oil-line-1" d="M -100,160 C 400,80 820,260 1300,140 C 1680,50 1920,200 2200,120" fill="none" stroke="url(#smartOilEmerald)" stroke-width="2.2" />
+        <path class="oil-contour-line oil-line-2" d="M -150,380 C 350,260 800,480 1280,340 C 1650,230 1880,410 2200,330" fill="none" stroke="url(#smartOilCyan)" stroke-width="2.0" />
+        <path class="oil-contour-line oil-line-4" d="M -120,680 C 420,550 880,780 1360,620 C 1720,510 1920,680 2220,600" fill="none" stroke="url(#smartOilAmber)" stroke-width="1.8" />
+        <path class="oil-contour-line oil-line-6" d="M -100,920 C 380,800 850,980 1330,850 C 1700,750 1900,900 2200,840" fill="none" stroke="url(#smartOilEmerald)" stroke-width="2.0" />
+      </svg>
+      <div class="smart-glow-orb smart-glow-1"></div>
+      <div class="smart-glow-orb smart-glow-2"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto w-full relative z-20">
+      
+      <!-- Section Header (Clean Light Theme aligned with Gallery) -->
+      <div class="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-4">
+          Kendali Presisi, <br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600">
+            Langsung di Genggaman.
+          </span>
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base md:text-lg leading-relaxed font-normal max-w-2xl mx-auto">
+          Pantau sisa pakan real-time lewat sensor loadcell digital, atur jadwal feeding otomatis, atau picu aktuasi pakan seketika langsung dari smartphone Anda.
+        </p>
+      </div>
+
+      <!-- 2-Column Showcase Layout: Phone Mockup (Left) + IoPakan Hardware 3D Companion (Right) Side-by-Side -->
+      <div class="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-14 max-w-6xl mx-auto w-full">
+        <!-- Left Column: Flutter IoTernak Phone Mockup -->
+        <div class="w-full md:w-auto flex flex-col items-center justify-center shrink-0">
+          <div class="phone-mockup-wrapper relative">
+            <div class="absolute -inset-4 bg-gradient-to-tr from-emerald-400/25 via-teal-300/20 to-sky-200/20 rounded-[60px] blur-2xl -z-10 pointer-events-none"></div>
+
+            <div class="phone-mockup-frame w-[315px] sm:w-[345px] h-[640px] sm:h-[680px] rounded-[52px] p-3 bg-gradient-to-b from-slate-200 via-slate-100 to-slate-300 shadow-[0_28px_80px_rgba(15,23,42,0.22),0_0_0_1px_rgba(255,255,255,0.8)] border-4 border-slate-300 relative">
+              <div class="phone-btn-volume absolute -left-2 top-24 w-1.5 h-12 bg-slate-400 rounded-l-sm"></div>
+              <div class="phone-btn-volume2 absolute -left-2 top-40 w-1.5 h-12 bg-slate-400 rounded-l-sm"></div>
+              <div class="phone-btn-power absolute -right-2 top-32 w-1.5 h-16 bg-slate-400 rounded-r-sm"></div>
+
+              <!-- Inner Screen (Soft Mint Background matching screenshot) -->
+              <div class="phone-inner-screen w-full h-full rounded-[42px] overflow-hidden relative flex flex-col justify-between text-slate-800 select-none shadow-inner" style="background-color: #eef8f2;">
+                
+                <!-- Status Bar with camera punch-hole (centered) -->
+                <div class="pt-3 px-5 flex items-center justify-between text-[11px] font-medium text-slate-600 relative z-30 shrink-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold tracking-tight text-slate-700 font-mono">1:53</span>
+                    <svg class="w-3 h-3 text-slate-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+                    <svg class="w-3 h-3 text-slate-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                  </div>
+
+                  <!-- Punch hole camera cutout -->
+                  <div class="w-4 h-4 rounded-full bg-slate-900 border border-slate-700/50 shadow-inner flex items-center justify-center">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#0c1f1b]"></span>
+                  </div>
+
+                  <div class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3 text-slate-600" viewBox="0 0 24 24" fill="currentColor"><path d="M2 22h4V14H2v8zm6 0h4V10H8v12zm6 0h4V6h-4v16zm6 0h4V2h-4v20z"/></svg>
+                    <svg class="w-3.5 h-3 text-slate-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.78 0 7.22 1.5 9.77 3.96L12 18.9 2.23 11.46C4.78 9.01 8.22 7.5 12 7.5z"/></svg>
+                    <div class="w-5 h-2.5 rounded-xs border border-slate-600 p-0.5 flex items-center">
+                      <div class="w-full h-full bg-slate-700 rounded-2xs"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- App Bar: Back Arrow, Centered IoPakan, Red Trash Icon Button -->
+                <div class="flex items-center justify-between px-4 py-1.5 relative z-30 shrink-0">
+                  <button type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-800 hover:bg-black/5 transition-colors cursor-pointer" title="Kembali">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                  </button>
+                  <h3 class="text-lg font-bold text-slate-900 tracking-tight font-display">IoPakan</h3>
+                  <button id="phone-btn-clear-all" type="button" title="Hapus Semua Jadwal" class="w-8 h-8 rounded-xl bg-red-100/80 hover:bg-red-200 text-red-500 flex items-center justify-center transition-colors cursor-pointer shadow-2xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  </button>
+                </div>
+
+                <!-- Phone Scrollable Body (Feeder Photo, Section Header, Schedule List, Add Button) -->
+                <div class="flex-1 overflow-y-auto px-4 py-1 flex flex-col justify-start relative z-10 phone-scroll-container">
+                  
+                  <!-- Hero 3D IoPakan Feeder Image (From /asset/iopakan.png) -->
+                  <div class="flex items-center justify-center py-1 shrink-0">
+                    <img 
+                      src="/asset/iopakan.png" 
+                      alt="IoPakan Feeder 3D Device" 
+                      class="h-36 sm:h-40 w-auto object-contain drop-shadow-sm select-none pointer-events-none transition-transform hover:scale-105"
+                    />
+                  </div>
+
+                  <!-- Section Title: Waktu Pemberian Pakan with vertical indicator and count badge -->
+                  <div class="flex items-center justify-between mb-2.5 px-0.5 shrink-0">
+                    <div class="flex items-center gap-2">
+                      <div class="w-1.5 h-4.5 bg-emerald-600 rounded-full"></div>
+                      <span class="text-sm font-bold text-slate-800 font-display">Waktu Pemberian Pakan</span>
+                    </div>
+                    <span id="phone-sched-count" class="text-[11px] font-bold bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full font-mono">4 Jadwal</span>
+                  </div>
+
+                  <!-- Schedule List Items Container -->
+                  <div id="phone-schedule-items" class="flex flex-col gap-2 pb-2 max-h-[220px] overflow-y-auto pr-0.5">
+                    <!-- Schedule cards injected dynamically -->
+                  </div>
+
+                  <!-- Add Schedule Button: "+ Tambah Jam Pakan Baru" (Always Visible) -->
+                  <button id="phone-btn-open-add" type="button" class="w-full py-3 px-4 rounded-2xl bg-[#e6f9ed] hover:bg-[#d5f5e3] border-2 border-dashed border-[#86efac] text-emerald-700 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all mt-1 mb-2 cursor-pointer shadow-2xs active:scale-[0.99]">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8"/></svg>
+                    <span>Tambah Jam Pakan Baru</span>
+                  </button>
+                </div>
+
+                <!-- Bottom Home Bar -->
+                <div class="w-28 h-1 bg-slate-400/80 rounded-full mx-auto my-2 shrink-0 relative z-30"></div>
+
+                <!-- Flutter In-App Modal Dialog Tambah Jadwal with Vertical Wheel Slider -->
+                <div id="phone-add-modal" class="phone-modal-backdrop hidden absolute inset-0 bg-slate-900/50 backdrop-blur-[3px] z-50 flex items-center justify-center p-3">
+                  <div class="w-full max-w-[285px] bg-white rounded-3xl p-4 shadow-2xl flex flex-col gap-3 border border-slate-100 animate-scale-up">
+                    <div class="flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+                      </div>
+                      <h4 class="text-xs font-bold text-slate-800 font-display">Tambah Jadwal Pakan</h4>
+                    </div>
+
+                    <!-- Vertical Wheel Slider Time Picker (JAM & MENIT) -->
+                    <div>
+                      <div class="text-[10px] font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                        <span>Pilih Waktu (Slider Jam &amp; Menit)</span>
+                        <span id="picker-display-time" class="text-emerald-600 font-mono font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded-md">14:00</span>
+                      </div>
+                      
+                      <div class="relative bg-emerald-50/50 rounded-2xl p-2 border border-emerald-200/70 overflow-hidden">
+                        <!-- Center Active Highlight Band -->
+                        <div class="absolute inset-x-2 top-1/2 -translate-y-1/2 h-8 bg-white rounded-xl shadow-xs border border-emerald-300 pointer-events-none z-0"></div>
+
+                        <div class="grid grid-cols-2 gap-2 relative z-10">
+                          <!-- Hour Wheel Column -->
+                          <div class="flex flex-col items-center">
+                            <button type="button" id="btn-hour-up" class="w-6 h-4 text-emerald-600 hover:text-emerald-800 flex items-center justify-center cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg></button>
+                            <div id="wheel-hour" class="wheel-scroll-col h-20 overflow-y-scroll snap-y snap-mandatory text-center scrollbar-none w-full py-6 select-none">
+                              <!-- Hour elements -->
+                            </div>
+                            <button type="button" id="btn-hour-down" class="w-6 h-4 text-emerald-600 hover:text-emerald-800 flex items-center justify-center cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg></button>
+                            <span class="text-[8px] font-mono text-slate-400 uppercase mt-0.5">Jam</span>
+                          </div>
+
+                          <!-- Minute Wheel Column -->
+                          <div class="flex flex-col items-center">
+                            <button type="button" id="btn-min-up" class="w-6 h-4 text-emerald-600 hover:text-emerald-800 flex items-center justify-center cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg></button>
+                            <div id="wheel-min" class="wheel-scroll-col h-20 overflow-y-scroll snap-y snap-mandatory text-center scrollbar-none w-full py-6 select-none">
+                              <!-- Minute elements -->
+                            </div>
+                            <button type="button" id="btn-min-down" class="w-6 h-4 text-emerald-600 hover:text-emerald-800 flex items-center justify-center cursor-pointer"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+                            <span class="text-[8px] font-mono text-slate-400 uppercase mt-0.5">Menit</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Portion Chips (Sedikit, Sedang, Banyak) -->
+                    <div>
+                      <div class="text-[10px] font-bold text-slate-700 mb-1">Kuantitas Porsi</div>
+                      <div class="grid grid-cols-3 gap-1.5" id="portion-selector">
+                        <button type="button" class="portion-btn p-1.5 rounded-xl border text-center text-[9px] font-bold flex flex-col items-center gap-0.5 cursor-pointer transition-all" data-gram="80" data-label="Sedikit">
+                          <span class="w-1.5 h-1.5 rounded-full bg-[#4FC3F7]"></span>
+                          <span>Sedikit</span>
+                        </button>
+                        <button type="button" class="portion-btn active p-1.5 rounded-xl border text-center text-[9px] font-bold flex flex-col items-center gap-0.5 cursor-pointer transition-all" data-gram="150" data-label="Sedang">
+                          <span class="flex gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-[#2ECC71]"></span><span class="w-1.5 h-1.5 rounded-full bg-[#2ECC71]"></span></span>
+                          <span>Sedang</span>
+                        </button>
+                        <button type="button" class="portion-btn p-1.5 rounded-xl border text-center text-[9px] font-bold flex flex-col items-center gap-0.5 cursor-pointer transition-all" data-gram="250" data-label="Banyak">
+                          <span class="flex gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-[#FFB300]"></span><span class="w-1.5 h-1.5 rounded-full bg-[#FFB300]"></span><span class="w-1.5 h-1.5 rounded-full bg-[#FFB300]"></span></span>
+                          <span>Banyak</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center gap-2 mt-1">
+                      <button type="button" id="phone-modal-cancel" class="flex-1 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold text-xs cursor-pointer hover:bg-slate-50 transition-colors">Batal</button>
+                      <button type="button" id="phone-modal-save" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs cursor-pointer transition-colors">Simpan</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Toast SnackBar inside phone -->
+                <div id="phone-toast" class="absolute bottom-10 left-3 right-3 bg-emerald-600 text-white px-3 py-2 rounded-xl text-[10px] font-bold shadow-lg z-50 flex items-center justify-between transition-all duration-300 transform translate-y-16 opacity-0 pointer-events-none">
+                  <span id="phone-toast-text">Jadwal baru tersimpan!</span>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center mt-3">
+              <span class="text-[11px] font-mono text-slate-500 uppercase tracking-widest flex items-center justify-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Mockup UI Flutter IoTernak App
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Right Column: Interactive 3D IoPakan Hardware Companion (Tanpa Kotakan, Floating Live Beside Phone) -->
+        <div class="flex-1 w-full flex flex-col items-center justify-center relative">
+          <div class="w-full h-[520px] sm:h-[620px] relative flex flex-col items-center justify-between">
+            
+            <!-- Top Status Indicator (Floating) -->
+            <div class="w-full flex items-center justify-between px-2 z-20 pointer-events-none">
+              <div id="companion-badge" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-emerald-300/80 text-emerald-800 text-xs font-mono font-bold shadow-xs transition-all duration-300">
+                <span id="companion-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="companion-label">IoPakan Siap &bull; Sinkron Jadwal</span>
+              </div>
+              <div class="px-2.5 py-1 rounded-full bg-emerald-100/90 border border-emerald-300/70 text-emerald-800 text-[10px] font-mono font-bold shadow-xs">
+                3D Live Hardware
+              </div>
+            </div>
+
+            <!-- 3D Three.js WebGL Mount (Completely Transparent, No Box Border or Card Background) -->
+            <div id="companion-canvas-mount" class="w-full flex-1 cursor-grab active:cursor-grabbing relative"></div>
+
+            <!-- Bottom Interactive Controls, 3D Model Inspection Tools & Trigger Schedule Button -->
+            <div class="w-full flex flex-col items-center gap-2.5 z-20">
+              
+              <!-- 3D Inspection Modes: Belah (Cutaway) & Lihat Dari Atas (Tanpa Tutup) -->
+              <div class="flex flex-wrap items-center justify-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-emerald-300/70 shadow-xs">
+                <span class="text-[11px] font-mono text-slate-500 font-semibold px-1">Inspeksi 3D:</span>
+                <button id="companion-btn-topview" type="button" class="companion-tool-btn px-3 py-1 rounded-full border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-700 font-mono text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                  <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  <span>Lihat Dari Atas (Buka Tutup)</span>
+                </button>
+                <button id="companion-btn-cutaway" type="button" class="companion-tool-btn px-3 py-1 rounded-full border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-700 font-mono text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                  <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 011.414.586l4.414 4.414a1 1 0 01.586 1.414V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+                  <span>Belah Model (Cutaway)</span>
+                </button>
+                <button id="companion-btn-resetview" type="button" class="companion-tool-btn px-2.5 py-1 rounded-full text-slate-500 hover:text-slate-800 font-mono text-xs font-semibold transition-all cursor-pointer" title="Kembalikan Tampilan Normal">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </button>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <button id="companion-add-schedule-btn" type="button" class="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-md shadow-emerald-600/25 transition-all active:scale-95 cursor-pointer flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8"/></svg>
+                  <span>Tambah Jadwal Pakan</span>
+                </button>
+                <button id="companion-manual-spin-btn" type="button" class="px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 border border-emerald-300 text-emerald-800 font-mono text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-emerald-600 animate-spin" style="animation-duration: 3s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                  <span>Uji Putar Dosing</span>
+                </button>
+              </div>
+
+              <div class="px-3 py-1 rounded-full bg-white/75 backdrop-blur-md border border-slate-200 text-slate-600 text-[11px] font-mono flex items-center gap-1.5 shadow-2xs">
+                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+                <span>Drag bebas rotasi &bull; Piringan sinkron otomatis</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LUXURY FOOTER & CTA SECTION -->
+  <footer class="betternak-footer">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        <div class="md:col-span-2">
+          <div class="font-display text-2xl font-black text-white flex items-center gap-2">
+            betternak <span class="text-emerald-400">&bull;</span> IoPakan
+          </div>
+          <p class="text-slate-400 text-sm mt-3 max-w-md leading-relaxed">
+            Pemberi pakan ayam otomatis berbasis IoT dengan rekayasa gravitasi presisi, kapasitas 10kg, dan motor torsi teruji untuk kandang peternakan modern Indonesia.
+          </p>
+          <div class="mt-5 flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono">Ready Stock 2026</span>
+            <span class="px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-xs font-mono">Garansi 1 Tahun</span>
+          </div>
+        </div>
+
+        <div>
+          <h5 class="text-xs uppercase font-mono tracking-widest text-slate-300 font-bold mb-3">Spesifikasi</h5>
+          <ul class="text-xs space-y-2 text-slate-400 font-medium">
+            <li>Kapasitas Silo: 10 Kilogram</li>
+            <li>Tinggi Operasi: 40 cm / 57 cm</li>
+            <li>Sistem Kontrol: WiFi ESP32 IoT</li>
+            <li>Akurasi Dosis: Sub-gram Loadcell</li>
+            <li>Material: ABS Food-Grade 3mm</li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 class="text-xs uppercase font-mono tracking-widest text-slate-300 font-bold mb-3">Pemesanan &amp; Kemitraan</h5>
+          <p class="text-xs text-slate-400 mb-4 leading-relaxed">Konsultasi instalasi kandang gratis bersama tim teknis Betternak.</p>
+          <a href="https://wa.me/6281234567890" target="_blank" class="btn-primary text-xs w-full justify-center">
+            Hubungi WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div>&copy; 2026 Betternak Ecosystem. Hak Cipta Dilindungi Undang-Undang.</div>
+        <div class="flex items-center gap-6">
+          <span>Inovasi Agrikultur Presisi</span>
+          <span>Made in Indonesia</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

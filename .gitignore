@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Heavy CAD Raw Files (GitHub 100MB limit)
+*iopakan_raw.glb*
+
+# OS
+.DS_Store
+Thumbs.db

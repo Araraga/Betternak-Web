@@ -1,0 +1,127 @@
+{
+  "general": {
+    "site_title": "Betternak • IoPakan Smart Feeder",
+    "logo_url": "/asset/logoteksbetternak.png",
+    "ready_badge": "Ready Stock 2026",
+    "warranty_badge": "Garansi 1 Tahun",
+    "footer_desc": "Pemberi pakan ayam otomatis berbasis IoT dengan rekayasa gravitasi presisi, kapasitas 10kg, dan motor torsi teruji untuk kandang peternakan modern Indonesia.",
+    "copyright": "© 2026 Betternak Ecosystem. Hak Cipta Dilindungi Undang-Undang."
+  },
+  "hero": {
+    "badge": "TEKNOLOGI PETERNAKAN PRESISI TINGGI 4.0",
+    "title": "Presisi Pakan di Setiap Butir.",
+    "subtitle": "IoPakan merevolusi pemberian pakan ternak. Rekayasa aerodinamis gravitasi terukur, kapasitas 10kg, dan pemantauan IoT cerdas langsung dari ponsel Anda.",
+    "cta_primary_text": "Pesan via WhatsApp",
+    "cta_secondary_text": "Jelajahi Fitur",
+    "silo_capacity_tag": "10.0 kg"
+  },
+  "story_cards": {
+    "card_1": {
+      "title": "Anatomi 8 Komponen Terurai",
+      "subtitle": "Setiap layer dirancang saling mengunci presisi sub-milimeter. Terurai vertikal menyingkap arsitektur mekanikal kokoh dan modular di baliknya."
+    },
+    "card_2": {
+      "title": "10kg Pakan, Bebas Khawatir",
+      "subtitle": "Ruang tampung 10kg sanggup menyuplai ratusan ayam berhari-hari. Di dalamnya bekerja deflektor piramida 45° anti-gumpal dan piringan dosing presisi."
+    },
+    "card_anti": {
+      "title": "Masalah Klasik Peternak",
+      "words": [
+        {
+          "word": "Berantakan.",
+          "desc": "Pakan tercecer di lantai kandang, mengundang hama dan memicu amonia tinggi yang membahayakan pernapasan ayam."
+        },
+        {
+          "word": "Ribet.",
+          "desc": "Menguras waktu dan tenaga setiap subuh dan sore hanya untuk mengisi puluhan tempat pakan secara manual satu per satu."
+        },
+        {
+          "word": "Tumpah.",
+          "desc": "Ayam saling berebut hingga wadah pakan terbalik. Ratusan kilogram pakan mahal terbuang sia-sia setiap periode pembesaran."
+        }
+      ]
+    }
+  },
+  "gallery": {
+    "badge": "Dokumentasi Riset & Perakitan",
+    "title_main": "Galeri Nyata",
+    "title_highlight": "IoPakan",
+    "subtitle": "Hasil dokumentasi nyata dari tahap perakitan presisi, uji mekanisme dosing, hingga implementasi di kandang ayam peternak mitra.",
+    "quote": {
+      "text": "Pemberian pakan konsisten setiap jam menghasilkan bobot panen seragam dan FCR yang jauh lebih efisien.",
+      "author": "— Riset Lapangan Betternak 2026"
+    },
+    "stat": {
+      "number": "99.4%",
+      "label": "Akurasi Dosis Gram Pakan",
+      "sub": "Mencegah pakan terbuang sia-sia akibat over-feeding di peternakan ayam."
+    },
+    "items": [
+      {
+        "id": 1,
+        "num": "01",
+        "image": "/asset/gallery-1.jpg",
+        "tag": "Fabrikasi & Perakitan",
+        "title": "Konstruksi Silo 10KG",
+        "desc": "Material polimer tahan benturan dengan kerapatan sambungan anti-air kandang."
+      },
+      {
+        "id": 2,
+        "num": "02",
+        "image": "/asset/gallery-2.jpg",
+        "tag": "Mekanisme Presisi",
+        "title": "Kalibrasi Piringan Dosing",
+        "desc": "Toleransi putar sub-milimeter menjaga butir pakan utuh tidak remuk."
+      },
+      {
+        "id": 3,
+        "num": "03",
+        "image": "/asset/gallery-3.jpg",
+        "tag": "Struktur Modular",
+        "title": "Kaki Tripod Adaptif",
+        "desc": "Dukungan beban hingga 25kg dengan ground grip anti-slip di alas sekam kandang."
+      },
+      {
+        "id": 4,
+        "num": "04",
+        "image": "/asset/gallery-4.jpg",
+        "tag": "Integrasi IoT",
+        "title": "Kompartemen Kontrol Pintar",
+        "desc": "Proteksi kelembapan kandang tinggi dengan segel karet silikon food grade."
+      },
+      {
+        "id": 5,
+        "num": "05",
+        "image": "/asset/gallery-5.jpg",
+        "tag": "Implementasi Mitra",
+        "title": "Uji Lapangan Kandang Broiler",
+        "desc": "Teruji beroperasi handal 24/7 di kandang ayam broiler berpopulasi ribuan."
+      },
+      {
+        "id": 6,
+        "num": "06",
+        "image": "/asset/gallery-6.jpg",
+        "tag": "Final Quality Check",
+        "title": "Unit Siap Distribusi",
+        "desc": "Setiap unit melewati uji kalibrasi motor, timbangan sensor, dan modul IoT."
+      }
+    ]
+  },
+  "specs": [
+    { "label": "Kapasitas Silo", "value": "10 Kilogram" },
+    { "label": "Tinggi Operasi", "value": "40 cm / 57 cm (Adjustable)" },
+    { "label": "Sistem Kontrol", "value": "WiFi ESP32 IoT & Cloud Dashboard" },
+    { "label": "Akurasi Dosis", "value": "Sub-gram Loadcell Digital" },
+    { "label": "Material", "value": "ABS Food-Grade 3mm & Stainless Steel" },
+    { "label": "Daya", "value": "12V DC Adapter / Baterai Cadangan 18650" }
+  ],
+  "contact": {
+    "whatsapp_number": "6281234567890",
+    "whatsapp_button_text": "Hubungi WhatsApp",
+    "whatsapp_message": "Halo Admin Betternak, saya ingin konsultasi dan pemesanan IoPakan Smart Feeder.",
+    "email": "info@betternak.com",
+    "phone": "+62 812-3456-7890",
+    "address": "Semarang & Banyumas, Jawa Tengah, Indonesia",
+    "hours": "Senin - Sabtu: 08:00 - 17:00 WIB"
+  }
+}
