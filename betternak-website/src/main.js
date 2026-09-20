@@ -28,8 +28,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.enabled = false;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.45;
 renderer.localClippingEnabled = true;
@@ -516,14 +515,28 @@ function restoreCameraFromScroll() {
 
 // 4. SCROLL PROGRESSION, HORIZONTAL PINNED GALLERY & SMART SECTION
 let isInSmartSection = false;
+let isMainCanvasActive = true;
+
+// Pre-cached DOM elements to eliminate layout thrashing on scroll
+const galPin = document.getElementById('gallery-pin-container');
+const galTrack = document.getElementById('gallery-track');
+const smartSec = document.getElementById('smart-control-section');
+const canvasContainer = document.getElementById('webgl-canvas-container');
+const storyCardsContainer = document.getElementById('story-cards-container');
+const galBgLight = document.getElementById('gallery-bg-light');
+
+// Lightweight IntersectionObserver for gallery kinetic typography entrances (Zero DOM layout thrashing)
+const galleryKineticObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    entry.target.classList.toggle('in-view', entry.isIntersecting);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.gallery-kinetic-text').forEach((el) => {
+  galleryKineticObserver.observe(el);
+});
 
 function updateGalleryScroll() {
-  const galPin = document.getElementById('gallery-pin-container');
-  const galTrack = document.getElementById('gallery-track');
-  const smartSec = document.getElementById('smart-control-section');
-  const canvasContainer = document.getElementById('webgl-canvas-container');
-  const storyCardsContainer = document.getElementById('story-cards-container');
-  const footerEl = document.querySelector('.betternak-footer');
   if (!galPin || !galTrack) return;
 
   const rect = galPin.getBoundingClientRect();
@@ -536,17 +549,7 @@ function updateGalleryScroll() {
   const maxTranslate = Math.max(0, galTrack.scrollWidth - window.innerWidth);
   galTrack.style.transform = `translateX(${-galProgress * maxTranslate}px)`;
 
-  // Dynamic entrance animation for unique gallery typography (no boxes)
-  document.querySelectorAll('.gallery-kinetic-text').forEach((el) => {
-    const r = el.getBoundingClientRect();
-    const inView = (r.left < window.innerWidth * 0.90 && r.right > window.innerWidth * 0.06);
-    el.classList.toggle('in-view', inView);
-  });
-
-  // Dynamic smooth transition of gallery background:
-  // Starts at 0 (100% dark cinema, identical to previous section)
-  // Cross-fades smoothly into #f8fafc (pure light ivory) matching #smart-control-section!
-  const galBgLight = document.getElementById('gallery-bg-light');
+  // Dynamic smooth transition of gallery background
   const tBg = Math.max(0, Math.min(1, (galProgress - 0.04) / 0.46));
   if (galBgLight) {
     galBgLight.style.opacity = tBg.toFixed(3);
@@ -558,67 +561,35 @@ function updateGalleryScroll() {
   }
 
   const sRect = smartSec ? smartSec.getBoundingClientRect() : null;
-  const fRect = footerEl ? footerEl.getBoundingClientRect() : null;
-
-  // Fade out story cards completely as user reaches the gallery
-  if (storyCardsContainer) {
-    if (rect.top < window.innerHeight * 0.55) {
-      const cardFade = Math.max(0, Math.min(1, (rect.top - window.innerHeight * 0.10) / (window.innerHeight * 0.45)));
-      storyCardsContainer.style.opacity = cardFade.toFixed(3);
-      storyCardsContainer.style.pointerEvents = cardFade > 0.1 ? 'auto' : 'none';
-    } else {
-      storyCardsContainer.style.opacity = '1';
-      storyCardsContainer.style.pointerEvents = 'auto';
-    }
-  }
-
-  // Determine active view mode
-  const inGallery = (rect.top < window.innerHeight * 0.25) && (rect.bottom > window.innerHeight * 0.35);
-  const inSmart = sRect && (sRect.top < window.innerHeight * 0.65) && (!fRect || fRect.top > window.innerHeight * 0.35);
-  const inFooter = fRect && (fRect.top <= window.innerHeight * 0.35);
-
+  const inSmart = sRect ? (sRect.top < window.innerHeight * 0.65) : false;
   isInSmartSection = inSmart;
 
-  // Smooth Canvas Opacity Transition - stays fully active during Chapter 3 360 inspection!
-  if (canvasContainer) {
-    if (inFooter) {
-      canvasContainer.style.opacity = '0';
-      canvasContainer.style.pointerEvents = 'none';
-    } else if (inSmart) {
-      if (sRect) {
-        const smartFadeIn = Math.max(0, Math.min(1, (window.innerHeight * 0.85 - sRect.top) / (window.innerHeight * 0.45)));
-        canvasContainer.style.opacity = smartFadeIn.toFixed(3);
-        canvasContainer.style.pointerEvents = smartFadeIn > 0.4 ? 'auto' : 'none';
-      } else {
-        canvasContainer.style.opacity = '1';
-        canvasContainer.style.pointerEvents = 'auto';
-      }
-    } else if (inGallery) {
-      canvasContainer.style.opacity = '0';
-      canvasContainer.style.pointerEvents = 'none';
-    } else if (rect.top < window.innerHeight * 0.50) {
-      // Gentle fade out dissolving into the gallery only after 360 rotation is complete
-      const fade = Math.max(0, Math.min(1, (rect.top - window.innerHeight * 0.05) / (window.innerHeight * 0.45)));
-      canvasContainer.style.opacity = fade.toFixed(3);
-      canvasContainer.style.pointerEvents = fade < 0.1 ? 'none' : 'auto';
-    } else {
-      canvasContainer.style.opacity = '1';
-      canvasContainer.style.pointerEvents = 'auto';
-    }
+  // Unified synchronized exit fade:
+  // BOTH the 3D model and the DOC chapter card ("Dari Bibit DOC Hingga Panen") fade out simultaneously into the gallery!
+  let hardwareExitOpacity = 1.0;
+  if (rect.top < window.innerHeight * 0.60) {
+    hardwareExitOpacity = Math.max(0, Math.min(1, (rect.top - window.innerHeight * 0.05) / (window.innerHeight * 0.55)));
   }
 
-  // Highlight Gallery Chapter Dot (index 4) or Smart Section (index 5)
-  if (inSmart) {
-    document.querySelectorAll('.chapter-dot').forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === 5);
-    });
-  } else if (inGallery || (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.2)) {
-    document.querySelectorAll('.chapter-dot').forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === 4);
-    });
+  const opacityStr = hardwareExitOpacity.toFixed(3);
+  const isHardwareVisible = hardwareExitOpacity > 0.01;
+
+  if (storyCardsContainer) {
+    storyCardsContainer.style.opacity = opacityStr;
+    storyCardsContainer.style.pointerEvents = hardwareExitOpacity > 0.15 ? 'auto' : 'none';
+    storyCardsContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
   }
+
+  if (canvasContainer) {
+    canvasContainer.style.opacity = opacityStr;
+    canvasContainer.style.pointerEvents = hardwareExitOpacity > 0.15 ? 'auto' : 'none';
+    canvasContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
+  }
+
+  isMainCanvasActive = isHardwareVisible;
 }
 
+let scrollRafPending = false;
 function updateScrollProgress() {
   restoreCameraFromScroll();
   const storyTrack = document.getElementById('story-scroll-track');
@@ -628,7 +599,17 @@ function updateScrollProgress() {
   }
   updateGalleryScroll();
 }
-window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+// RequestAnimationFrame throttled scroll listener (prevents frame drops & locks scroll to display vsync)
+window.addEventListener('scroll', () => {
+  if (!scrollRafPending) {
+    scrollRafPending = true;
+    requestAnimationFrame(() => {
+      updateScrollProgress();
+      scrollRafPending = false;
+    });
+  }
+}, { passive: true });
 updateScrollProgress();
 
 // Dynamic Slicing control (facing front camera)
@@ -650,7 +631,7 @@ function setExplodedProgress(progress) {
   });
 }
 
-// Sticky Story Cards & Dots Active Chapter Controller
+// Sticky Story Cards Active Chapter Controller
 const ALL_STORY_CARDS = ['card-0', 'card-1', 'card-2', 'card-anti', 'card-3'];
 let currentActiveCardId = null;
 
@@ -658,33 +639,12 @@ function updateActiveStoryCard(cardId) {
   if (currentActiveCardId === cardId) return;
   currentActiveCardId = cardId;
 
-  const storyContainer = document.getElementById('story-cards-container');
-  if (storyContainer) {
-    storyContainer.classList.toggle('hidden', cardId === null);
-  }
-
   ALL_STORY_CARDS.forEach((id) => {
     const card = document.getElementById(id);
     if (card) {
       card.classList.toggle('active', id === cardId);
     }
   });
-
-  // Map to dots 0-3
-  let dotIdx = -1;
-  if (cardId === 'card-0') dotIdx = 0;
-  else if (cardId === 'card-1') dotIdx = 1;
-  else if (cardId === 'card-2' || cardId === 'card-anti') dotIdx = 2;
-  else if (cardId === 'card-3') dotIdx = 3;
-
-  const galPin = document.getElementById('gallery-pin-container');
-  const inGalleryOrBeyond = galPin && galPin.getBoundingClientRect().top < window.innerHeight * 0.7;
-  if (!inGalleryOrBeyond && !isInSmartSection) {
-    document.querySelectorAll('.chapter-dot').forEach((dot) => {
-      const dIdx = parseInt(dot.dataset.chapter, 10);
-      dot.classList.toggle('active', dIdx === dotIdx);
-    });
-  }
 }
 
 // Dynamic Scroll-Driven Kinetic Word & Description Morph
@@ -1019,7 +979,7 @@ function animate() {
   } else if (smoothScroll >= 0.70 && smoothScroll < 0.85) {
     // Anti-Tumpah Dosing (Berantakan -> Ribet -> Tumpah)
     activeCard = 'card-anti';
-  } else if (smoothScroll >= 0.87 && smoothScroll < 0.995) {
+  } else if (smoothScroll >= 0.87) {
     // Modular Legs (Fase DOC hingga Dewasa - Slow gentle inspection)
     activeCard = 'card-3';
   } else {
@@ -1032,7 +992,6 @@ function animate() {
       // SECTION 3: KENDALI PRESISI (SMARTPHONE IOT & COMPANION 3D IOPAKAN)
       // Dedicated companion viewer in right column handles the 3D model
       feedInst.visible = false;
-      updatePelletCascade(delta, false);
       update10kgDimensionOverlay(false, delta);
 
     } else {
@@ -1181,11 +1140,13 @@ function animate() {
   }
 
   controls.update();
-  renderer.render(scene, camera);
+  if (isMainCanvasActive) {
+    renderer.render(scene, camera);
+  }
 }
 animate();
 
-// 6. INTERACTIVE BUTTON & DOT HANDLERS
+// 6. INTERACTIVE BUTTON HANDLERS
 function scrollToProgress(p) {
   const storyTrack = document.getElementById('story-scroll-track');
   if (storyTrack) {
@@ -1193,21 +1154,6 @@ function scrollToProgress(p) {
     window.scrollTo({ top: maxStoryScroll * p, behavior: 'smooth' });
   }
 }
-
-// Chapter dots click navigation (Dots 0-3: 3D hardware, Dot 4: Gallery, Dot 5: Smart IoT Section)
-document.querySelectorAll('.chapter-dot').forEach((dot) => {
-  dot.addEventListener('click', () => {
-    const cIdx = parseInt(dot.dataset.chapter, 10);
-    if (cIdx === 4) {
-      document.getElementById('gallery-pin-container')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (cIdx === 5) {
-      document.getElementById('smart-control-section')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      const targets = [0.05, 0.28, 0.52, 0.94];
-      scrollToProgress(targets[cIdx] || 0.0);
-    }
-  });
-});
 
 // Modular legs toggles ("Satu Alat Semua Fase")
 let userManuallyToggledLegs = false;
@@ -1272,7 +1218,7 @@ function initCompanionViewer(sourceScene) {
 
   companionRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   companionRenderer.setSize(width, height);
-  companionRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  companionRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   companionRenderer.outputColorSpace = THREE.SRGBColorSpace;
   companionRenderer.toneMapping = THREE.ACESFilmicToneMapping;
   // Brighter exposure so the 3D model looks clean and vibrant against the light theme
@@ -1383,9 +1329,19 @@ function initCompanionViewer(sourceScene) {
   });
   resizeObserver.observe(mount);
 
-  // Animate companion model
+  // IntersectionObserver to PAUSE companion rendering when offscreen (saves 100% GPU / CPU)
+  let isCompanionInView = false;
+  const companionVisibilityObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      isCompanionInView = entry.isIntersecting;
+    });
+  }, { threshold: 0.02, rootMargin: '120px' });
+  companionVisibilityObserver.observe(mount);
+
+  // Animate companion model - ONLY renders when visible on screen!
   function animateCompanion() {
     requestAnimationFrame(animateCompanion);
+    if (!isCompanionInView || !companionRenderer) return;
     companionControls.update();
     if (isCompanionSpinning && companionPiring) {
       companionPiring.rotation.y += 0.22;
