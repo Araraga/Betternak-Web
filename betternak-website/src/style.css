@@ -817,6 +817,23 @@ body {
   align-items: center;
 }
 
+/* Atmospheric Soft Feather on Top Edge of Gallery Viewport */
+.gallery-sticky-viewport::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(to bottom, rgba(6, 9, 13, 0.92) 0%, rgba(6, 9, 13, 0.4) 50%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.bright-gallery-theme .gallery-sticky-viewport::before {
+  opacity: 0;
+}
+
 .gallery-track {
   position: relative;
   z-index: 3;

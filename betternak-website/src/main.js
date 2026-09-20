@@ -564,26 +564,35 @@ function updateGalleryScroll() {
   const inSmart = sRect ? (sRect.top < window.innerHeight * 0.65) : false;
   isInSmartSection = inSmart;
 
-  // Unified synchronized exit fade:
-  // BOTH the 3D model and the DOC chapter card ("Dari Bibit DOC Hingga Panen") fade out simultaneously
-  // and completely BEFORE the gallery enters the screen, eliminating any collision!
+  // Cinematic, generous, velvety exit fade from 3D narrative (Bibit DOC) into Gallery:
+  // Spans a luxurious ~110vh scroll window with Hermite smoothstep easing for zero-cut, buttery transitions.
+  const fadeStart = window.innerHeight * 1.15;
+  const fadeEnd = window.innerHeight * 0.05;
   let hardwareExitOpacity = 1.0;
-  if (rect.top < window.innerHeight * 1.25) {
-    hardwareExitOpacity = Math.max(0, Math.min(1, (rect.top - window.innerHeight * 1.0) / (window.innerHeight * 0.25)));
+
+  if (rect.top <= fadeEnd) {
+    hardwareExitOpacity = 0.0;
+  } else if (rect.top < fadeStart) {
+    const t = (rect.top - fadeEnd) / (fadeStart - fadeEnd);
+    hardwareExitOpacity = t * t * (3 - 2 * t);
+  } else {
+    hardwareExitOpacity = 1.0;
   }
 
   const opacityStr = hardwareExitOpacity.toFixed(3);
-  const isHardwareVisible = hardwareExitOpacity > 0.005;
+  const isHardwareVisible = hardwareExitOpacity > 0.002;
+  const floatUpY = ((1.0 - hardwareExitOpacity) * -36).toFixed(1);
 
   if (storyCardsContainer) {
     storyCardsContainer.style.opacity = opacityStr;
-    storyCardsContainer.style.pointerEvents = hardwareExitOpacity > 0.15 ? 'auto' : 'none';
+    storyCardsContainer.style.transform = `translate3d(0, ${floatUpY}px, 0)`;
+    storyCardsContainer.style.pointerEvents = hardwareExitOpacity > 0.20 ? 'auto' : 'none';
     storyCardsContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
   }
 
   if (canvasContainer) {
     canvasContainer.style.opacity = opacityStr;
-    canvasContainer.style.pointerEvents = hardwareExitOpacity > 0.15 ? 'auto' : 'none';
+    canvasContainer.style.pointerEvents = hardwareExitOpacity > 0.20 ? 'auto' : 'none';
     canvasContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
   }
 
@@ -938,7 +947,8 @@ const clock = new THREE.Clock();
 
 function animate() {
   requestAnimationFrame(animate);
-  const delta = clock.getDelta();
+  const rawDelta = clock.getDelta();
+  const delta = Math.min(rawDelta, 0.05);
 
   // Luxurious, velvety smooth inertia (slower and silky smooth)
   smoothScroll += (targetScroll - smoothScroll) * 0.058;
@@ -980,8 +990,8 @@ function animate() {
   } else if (smoothScroll >= 0.70 && smoothScroll < 0.85) {
     // Anti-Tumpah Dosing (Berantakan -> Ribet -> Tumpah)
     activeCard = 'card-anti';
-  } else if (smoothScroll >= 0.87 && smoothScroll < 0.96) {
-    // Modular Legs (Fase DOC hingga Dewasa - Slow gentle inspection)
+  } else if (smoothScroll >= 0.87) {
+    // Modular Legs (Fase DOC hingga Dewasa - Climax of 3D narrative)
     activeCard = 'card-3';
   } else {
     activeCard = null;
