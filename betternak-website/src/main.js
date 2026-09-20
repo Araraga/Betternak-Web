@@ -530,7 +530,7 @@ const galleryKineticObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     entry.target.classList.toggle('in-view', entry.isIntersecting);
   });
-}, { threshold: 0.15 });
+}, { threshold: 0.18 });
 
 document.querySelectorAll('.gallery-kinetic-text').forEach((el) => {
   galleryKineticObserver.observe(el);
@@ -565,14 +565,15 @@ function updateGalleryScroll() {
   isInSmartSection = inSmart;
 
   // Unified synchronized exit fade:
-  // BOTH the 3D model and the DOC chapter card ("Dari Bibit DOC Hingga Panen") fade out simultaneously into the gallery!
+  // BOTH the 3D model and the DOC chapter card ("Dari Bibit DOC Hingga Panen") fade out simultaneously
+  // and completely BEFORE the gallery enters the screen, eliminating any collision!
   let hardwareExitOpacity = 1.0;
-  if (rect.top < window.innerHeight * 0.60) {
-    hardwareExitOpacity = Math.max(0, Math.min(1, (rect.top - window.innerHeight * 0.05) / (window.innerHeight * 0.55)));
+  if (rect.top < window.innerHeight * 1.25) {
+    hardwareExitOpacity = Math.max(0, Math.min(1, (rect.top - window.innerHeight * 1.0) / (window.innerHeight * 0.25)));
   }
 
   const opacityStr = hardwareExitOpacity.toFixed(3);
-  const isHardwareVisible = hardwareExitOpacity > 0.01;
+  const isHardwareVisible = hardwareExitOpacity > 0.005;
 
   if (storyCardsContainer) {
     storyCardsContainer.style.opacity = opacityStr;
@@ -979,7 +980,7 @@ function animate() {
   } else if (smoothScroll >= 0.70 && smoothScroll < 0.85) {
     // Anti-Tumpah Dosing (Berantakan -> Ribet -> Tumpah)
     activeCard = 'card-anti';
-  } else if (smoothScroll >= 0.87) {
+  } else if (smoothScroll >= 0.87 && smoothScroll < 0.96) {
     // Modular Legs (Fase DOC hingga Dewasa - Slow gentle inspection)
     activeCard = 'card-3';
   } else {
