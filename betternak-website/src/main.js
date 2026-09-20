@@ -245,8 +245,9 @@ const materials = {
   })
 };
 
+const BASE_URL = import.meta.env.BASE_URL || './';
 const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath('/draco/');
+dracoLoader.setDecoderPath(BASE_URL + 'draco/');
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
 
@@ -345,7 +346,7 @@ function loadFeeder(path) {
     }
   );
 }
-loadFeeder('/iopakan.glb');
+loadFeeder(BASE_URL + 'iopakan.glb');
 
 // 3. REALISTIC 5-HOLE PELLET CASCADE & CAD DOSING DISC SIMULATION
 const PELLET_COUNT = 20; // 5 apertures x 4 staggered pellets
