@@ -348,7 +348,7 @@ async function loadMediaList() {
   const mount = document.getElementById('mediaGalleryList');
   if (!mount) return;
   try {
-    const res = await fetch('/api/images');
+    const res = await fetch(`${API_BASE}/images`);
     const json = await res.json();
     if (json.success && json.files) {
       if (!json.files.length) { mount.innerHTML = '<div class="col-span-full text-xs text-slate-500 text-center">Belum ada file.</div>'; return; }
@@ -369,7 +369,7 @@ async function loadMediaList() {
       }));
       mount.querySelectorAll('.del-media-btn').forEach(b => b.addEventListener('click', async () => {
         if (!confirm('Hapus file?')) return;
-        await fetch(`/api/images/${b.getAttribute('data-name')}`, { method: 'DELETE' });
+        await fetch(`${API_BASE}/images/${b.getAttribute('data-name')}`, { method: 'DELETE' });
         showToast('File dihapus'); loadMediaList();
       }));
     }

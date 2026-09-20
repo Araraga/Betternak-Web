@@ -1,4 +1,7 @@
 // Betternak Admin Core Script
+const BASE_PATH = window.location.pathname.startsWith('/betternak-admin') ? '/betternak-admin' : '';
+const API_BASE = BASE_PATH + '/api';
+
 let contentData = null;
 let activeTab = 'tab-hero';
 
@@ -39,7 +42,7 @@ loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const password = document.getElementById('loginPassword').value;
   try {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password })
@@ -69,7 +72,7 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 // Load Content from Server
 async function loadContent() {
   try {
-    const res = await fetch('/api/content');
+    const res = await fetch(`${API_BASE}/content`);
     const json = await res.json();
     if (json.success && json.data) {
       contentData = json.data;
@@ -96,7 +99,7 @@ document.querySelectorAll('.tab-btn').forEach((btn) => {
 async function uploadFile(file) {
   const formData = new FormData();
   formData.append('file', file);
-  const res = await fetch('/api/upload', {
+  const res = await fetch(`${API_BASE}/upload`, {
     method: 'POST',
     body: formData
   });
@@ -112,7 +115,7 @@ document.getElementById('saveAllBtn').addEventListener('click', async () => {
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<span>⏳ Menyimpan...</span>';
 
-    const res = await fetch('/api/content', {
+    const res = await fetch(`${API_BASE}/content`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(contentData)

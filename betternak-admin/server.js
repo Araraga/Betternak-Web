@@ -15,6 +15,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'betternak2026';
 const DATA_FILE = path.join(__dirname, 'data', 'content.json');
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 const WEBSITE_PUBLIC_CONTENT = path.join(__dirname, '..', 'betternak-website', 'public', 'content.json');
+const WEBSITE_DIST_CONTENT = path.join(__dirname, '..', 'betternak-website', 'dist', 'content.json');
 const WEBSITE_UPLOADS_DIR = path.join(__dirname, '..', 'betternak-website', 'public', 'uploads');
 
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -63,6 +64,11 @@ function writeContent(data) {
   try {
     if (fs.existsSync(path.dirname(WEBSITE_PUBLIC_CONTENT))) {
       fs.writeFileSync(WEBSITE_PUBLIC_CONTENT, JSON.stringify(data, null, 2), 'utf-8');
+    }
+  } catch (e) {}
+  try {
+    if (fs.existsSync(path.dirname(WEBSITE_DIST_CONTENT))) {
+      fs.writeFileSync(WEBSITE_DIST_CONTENT, JSON.stringify(data, null, 2), 'utf-8');
     }
   } catch (e) {}
 }
