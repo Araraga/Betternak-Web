@@ -25,14 +25,12 @@ camera.position.set(0.0, 0.85, 10.2);
 const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
 const renderer = new THREE.WebGLRenderer({
-  antialias: !isMobileDevice, // Disable MSAA on mobile to prevent tile memory bottlenecks
+  antialias: true,
   alpha: true,
-  powerPreference: 'high-performance',
-  precision: isMobileDevice ? 'mediump' : 'highp'
+  powerPreference: 'high-performance'
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
-// On mobile, clamp DPR to 1.0 to eliminate retina fill-rate lag; on desktop allow up to 1.5
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1.0 : 1.5));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.shadowMap.enabled = false;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.45;
@@ -172,9 +170,7 @@ let autoRotate = true;
 // - Grey (abu-abu): piramid, piring, nema mount, kaki
 // - Green (hijau): tutup, sisiatas (silo 10kg opaque), sisibawah, bawah
 // - Slightly glossy finish (roughness 0.25 - 0.32, metalness 0.16 - 0.55)
-// Performance optimization: Solid non-sliced parts use THREE.FrontSide to cull >1.1M triangles!
-const cutawaySide = isMobileDevice ? THREE.FrontSide : THREE.DoubleSide;
-
+// - DoubleSide ensures zero missing geometry, solid wall rendering, and accurate CAD cross-sections
 const materials = {
   // HIJAU: Tutup Kedap Cuaca
   tutup: new THREE.MeshStandardMaterial({
@@ -182,7 +178,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.18,
     flatShading: false,
-    side: cutawaySide,
+    side: THREE.DoubleSide,
     clippingPlanes: [clipPlane],
     clipShadows: true
   }),
@@ -192,7 +188,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.16,
     flatShading: false,
-    side: cutawaySide,
+    side: THREE.DoubleSide,
     clippingPlanes: [clipPlane],
     clipShadows: true
   }),
@@ -202,7 +198,7 @@ const materials = {
     roughness: 0.26,
     metalness: 0.50,
     flatShading: false,
-    side: THREE.FrontSide
+    side: THREE.DoubleSide
   }),
   // HIJAU: Chute Body Bawah
   sisibawah: new THREE.MeshStandardMaterial({
@@ -210,7 +206,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.16,
     flatShading: false,
-    side: cutawaySide,
+    side: THREE.DoubleSide,
     clippingPlanes: [clipPlane],
     clipShadows: true
   }),
@@ -220,7 +216,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.45,
     flatShading: false,
-    side: THREE.FrontSide
+    side: THREE.DoubleSide
   }),
   // ABU-ABU: Bracket Motor NEMA
   nemabracket: new THREE.MeshStandardMaterial({
@@ -228,23 +224,27 @@ const materials = {
     roughness: 0.25,
     metalness: 0.55,
     flatShading: false,
-    side: THREE.FrontSide
+    side: THREE.DoubleSide
   }),
-  // HIJAU: Mangkuk Feeder Anti-Tumpah (535k triangles - FrontSide saves >500k backfaces)
+  // HIJAU: Mangkuk Feeder Anti-Tumpah
   bawah: new THREE.MeshStandardMaterial({
     color: 0x0c542c,
     roughness: 0.28,
     metalness: 0.18,
     flatShading: false,
-    side: THREE.FrontSide
+    side: THREE.DoubleSide,
+    clippingPlanes: [clipPlane],
+    clipShadows: true
   }),
-  // ABU-ABU: Kaki Tripod Modular (190k triangles - FrontSide saves >190k backfaces)
+  // ABU-ABU: Kaki Tripod Modular
   kaki: new THREE.MeshStandardMaterial({
     color: 0x334155,
     roughness: 0.32,
     metalness: 0.35,
     flatShading: false,
-    side: THREE.FrontSide
+    side: THREE.DoubleSide,
+    clippingPlanes: [clipPlane],
+    clipShadows: true
   })
 };
 
@@ -780,10 +780,10 @@ const CINEMATIC_WAYPOINTS = [
   { scroll: 0.00, modelX: 0.0, modelY: 0.45, camX: 0.0, camY: 0.70, camZ: 10.2, targetX: 0.0, targetY: 0.35, targetZ: 0.0 },
   // 1: Daylight reveal hero, beginning trajectory
   { scroll: 0.12, modelX: 0.0, modelY: 0.40, camX: 0.0, camY: 0.70, camZ: 10.5, targetX: 0.0, targetY: 0.30, targetZ: 0.0 },
-  // 2: Exploded Anatomy Arrives at Far Distance (Zoom out & shift left)
-  { scroll: 0.22, modelX: -2.0, modelY: 0.0, camX: -3.8, camY: 3.0, camZ: 21.5, targetX: -2.0, targetY: 2.2, targetZ: 0.0 },
+  // 2: Exploded Anatomy Arrives at Far Distance (Zoom out & positioned on right for left-side narrative card)
+  { scroll: 0.22, modelX: 1.8, modelY: 0.0, camX: 0.0, camY: 3.0, camZ: 21.5, targetX: 1.8, targetY: 2.2, targetZ: 0.0 },
   // 3: Exploded Anatomy STAYS AT FAR DISTANCE (Gentle, slow rotation)
-  { scroll: 0.36, modelX: -2.0, modelY: 0.0, camX: -3.8, camY: 3.0, camZ: 21.5, targetX: -2.0, targetY: 2.2, targetZ: 0.0 },
+  { scroll: 0.36, modelX: 1.8, modelY: 0.0, camX: 0.0, camY: 3.0, camZ: 21.5, targetX: 1.8, targetY: 2.2, targetZ: 0.0 },
   // 4: Implode and Zoom in close to Silo 10kg
   { scroll: 0.44, modelX: 1.8, modelY: 0.0, camX: 1.8, camY: 0.85, camZ: 6.4, targetX: 1.8, targetY: 0.85, targetZ: 0.0 },
   // 5: Silo Cutaway 10kg stays close and stable (Slower & wider window 0.44 -> 0.64)
@@ -1233,13 +1233,12 @@ function initCompanionViewer(sourceScene) {
   companionCamera.position.set(0, 0.70, 7.8);
 
   companionRenderer = new THREE.WebGLRenderer({
-    antialias: !isMobileDevice,
+    antialias: true,
     alpha: true,
-    powerPreference: 'high-performance',
-    precision: isMobileDevice ? 'mediump' : 'highp'
+    powerPreference: 'high-performance'
   });
   companionRenderer.setSize(width, height);
-  companionRenderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1.0 : 1.4));
+  companionRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   companionRenderer.outputColorSpace = THREE.SRGBColorSpace;
   companionRenderer.toneMapping = THREE.ACESFilmicToneMapping;
   // Brighter exposure so the 3D model looks clean and vibrant against the light theme
@@ -1313,7 +1312,7 @@ function initCompanionViewer(sourceScene) {
         child.material = child.material.clone();
         child.material.clippingPlanes = [companionClipPlane];
         child.material.clipShadows = true;
-        child.material.side = isMobileDevice ? THREE.FrontSide : THREE.DoubleSide; // Save fill rate on mobile
+        child.material.side = THREE.DoubleSide; // Clean solid interior when cutaway is active
 
         if (child.material.color) {
           const hex = child.material.color.getHex();
