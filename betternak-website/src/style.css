@@ -1448,6 +1448,73 @@ body {
   box-shadow: 0 6px 14px -3px rgba(0, 0, 0, 0.08);
 }
 
+
+/* ==========================================================================
+   MOBILE PERFORMANCE OPTIMIZATIONS (Eliminates GPU thermal lag & drop frames)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. Stop continuous infinite keyframe rasterization on background SVGs */
+  .tech-grid-pattern {
+    animation: none !important;
+    transform: none !important;
+  }
+  .cyber-laser-line,
+  .cyber-diag-line {
+    animation: none !important;
+  }
+  .tech-radar-reticle {
+    animation: none !important;
+  }
+
+  /* 2. Remove heavy SVG blur filter that freezes mobile Safari/Chrome */
+  .gallery-oil-svg {
+    filter: none !important;
+  }
+  .oil-contour-line {
+    animation: none !important;
+    filter: none !important;
+    opacity: 0.35 !important;
+  }
+  .smart-ambient-svg path {
+    animation: none !important;
+  }
+
+  /* 3. Reduce expensive 80px blur & stop floating animations */
+  .smart-glow-orb {
+    animation: none !important;
+    filter: blur(36px) !important;
+    opacity: 0.28 !important;
+  }
+
+  /* 4. Streamline glass backdrop filters for touch compositing */
+  .glass-panel,
+  .glass-subpanel,
+  .glass-nav-pill,
+  .panel-iot,
+  .dim-badge-inner,
+  .gallery-intro-badge {
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+  }
+
+  /* 5. Disable heavy box-shadows on mobile cards to free GPU fill-rate */
+  .story-card {
+    box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  /* 6. Hardware accelerate horizontal gallery track translation */
+  .gallery-track {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* 7. Canvas container touch optimization */
+  #webgl-canvas-container canvas {
+    touch-action: pan-y !important;
+  }
+}
+
 /* Phone Toast Notification */
 #phone-toast {
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);

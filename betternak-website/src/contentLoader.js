@@ -3,7 +3,16 @@
 
 export async function initDynamicContent() {
   let content = null;
-  const sources = ['/api/content', '/content.json'];
+  const base = import.meta.env.BASE_URL || '/';
+  const cleanBase = base.endsWith('/') ? base : base + '/';
+  const sources = [
+    '/betternak-admin/api/content', // Nginx subpath on port 80
+    '/admin/api/content',           // Nginx subpath on port 8080
+    '/api/content',                 // Direct root or local proxy
+    `${cleanBase}content.json`,     // Static fallback matching current base
+    './content.json',
+    '/content.json'
+  ];
 
   for (const src of sources) {
     try {
@@ -11,7 +20,10 @@ export async function initDynamicContent() {
       if (res.ok) {
         const json = await res.json();
         content = json.data || json;
-        if (content && content.general) break;
+        if (content && (content.general || content.hero)) {
+          console.log('[ContentLoader] Hydrated successfully from:', src);
+          break;
+        }
       }
     } catch (e) {
       // Continue to next source

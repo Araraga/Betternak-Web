@@ -4,6 +4,9 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import pg from 'pg';
+
+const { Pool } = pg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +14,21 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3002;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'betternak2026';
+
+// PostgreSQL Database Connection Config
+const dbConfig = {
+  host: process.env.DB_HOST || '127.0.0.1',
+  port: parseInt(process.env.DB_PORT || '5432', 10),
+  user: process.env.DB_USER || 'betternak',
+  password: process.env.DB_PASSWORD || 'betternak2026',
+  database: process.env.DB_NAME || 'betternak',
+  connectionTimeoutMillis: 5000,
+  idleTimeoutMillis: 30000,
+  max: 10
+};
+
+const pool = new Pool(dbConfig);
+let isPostgresReady = false;
 
 const DATA_FILE = path.join(__dirname, 'data', 'content.json');
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
@@ -34,6 +52,46 @@ if (fs.existsSync(websiteAssetDir)) {
 }
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Initialize PostgreSQL Database Schema & Auto-seed
+async function initDatabase() {
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS site_content (
+          id SERIAL PRIMARY KEY,
+          key VARCHAR(64) UNIQUE NOT NULL,
+          data JSONB NOT NULL,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // Check if table has data
+      const checkRes = await client.query("SELECT COUNT(*) FROM site_content WHERE key = 'content';");
+      const count = parseInt(checkRes.rows[0].count, 10);
+      if (count === 0 && fs.existsSync(DATA_FILE)) {
+        console.log('[PostgreSQL] Table site_content is empty, auto-seeding from content.json...');
+        const initial = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+        await client.query(
+          `INSERT INTO site_content (key, data, updated_at) VALUES ('content', $1, CURRENT_TIMESTAMP)
+           ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data, updated_at = CURRENT_TIMESTAMP;`,
+          [initial]
+        );
+        console.log('[PostgreSQL] Seed complete. Content permanently stored in PostgreSQL.');
+      }
+      isPostgresReady = true;
+      console.log(`[PostgreSQL] Connected successfully to database: ${dbConfig.database} as user: ${dbConfig.user}`);
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    isPostgresReady = false;
+    console.warn('[PostgreSQL] Connection warning:', err.message);
+    console.warn('[PostgreSQL] Admin API will safely fallback to local content.json.');
+  }
+}
+initDatabase();
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => {
@@ -54,13 +112,19 @@ const upload = multer({
   }
 });
 
-function readContent() {
+function readLocalContentFile() {
   if (!fs.existsSync(DATA_FILE)) return { error: 'content.json not found' };
-  return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+  try {
+    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+  } catch (err) {
+    return { error: 'Invalid JSON in content.json' };
+  }
 }
 
-function writeContent(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+function writeLocalContentFile(data) {
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (e) {}
   try {
     if (fs.existsSync(path.dirname(WEBSITE_PUBLIC_CONTENT))) {
       fs.writeFileSync(WEBSITE_PUBLIC_CONTENT, JSON.stringify(data, null, 2), 'utf-8');
@@ -73,7 +137,67 @@ function writeContent(data) {
   } catch (e) {}
 }
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
+async function getContent() {
+  try {
+    const res = await pool.query("SELECT data, updated_at FROM site_content WHERE key = 'content' LIMIT 1;");
+    if (res.rows.length > 0 && res.rows[0].data) {
+      return { data: res.rows[0].data, source: 'postgresql', updatedAt: res.rows[0].updated_at };
+    }
+  } catch (err) {
+    console.warn('[PostgreSQL] Read fallback:', err.message);
+  }
+  return { data: readLocalContentFile(), source: 'json_file', updatedAt: null };
+}
+
+async function saveContent(data) {
+  let dbSaved = false;
+  let dbError = null;
+
+  try {
+    await pool.query(
+      `INSERT INTO site_content (key, data, updated_at) VALUES ('content', $1, CURRENT_TIMESTAMP)
+       ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data, updated_at = CURRENT_TIMESTAMP;`,
+      [data]
+    );
+    dbSaved = true;
+  } catch (err) {
+    dbError = err.message;
+    console.error('[PostgreSQL] Save error:', err.message);
+  }
+
+  // Always write to local backup JSON as well so static builds have an updated copy
+  writeLocalContentFile(data);
+
+  return { dbSaved, dbError };
+}
+
+app.get('/api/health', (req, res) => res.json({
+  status: 'ok',
+  postgres: isPostgresReady ? 'connected' : 'offline',
+  time: new Date().toISOString()
+}));
+
+app.get('/api/db-status', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    try {
+      const timeRes = await client.query('SELECT NOW() as time, current_database(), current_user;');
+      const contentRes = await client.query("SELECT updated_at FROM site_content WHERE key = 'content' LIMIT 1;");
+      res.json({
+        success: true,
+        status: 'connected',
+        database: timeRes.rows[0].current_database,
+        user: timeRes.rows[0].current_user,
+        serverTime: timeRes.rows[0].time,
+        contentUpdatedAt: contentRes.rows[0] ? contentRes.rows[0].updated_at : null
+      });
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, status: 'error', message: err.message });
+  }
+});
 
 app.post('/api/auth/login', (req, res) => {
   const { password } = req.body;
@@ -84,23 +208,36 @@ app.post('/api/auth/login', (req, res) => {
   res.status(401).json({ success: false, message: 'Password salah!' });
 });
 
-app.get('/api/content', (req, res) => {
+app.get('/api/content', async (req, res) => {
   try {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.json({ success: true, data: readContent() });
+    const result = await getContent();
+    res.json({
+      success: true,
+      data: result.data,
+      source: result.source,
+      updatedAt: result.updatedAt
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-app.post('/api/content', (req, res) => {
+app.post('/api/content', async (req, res) => {
   try {
     const newContent = req.body;
     if (!newContent || typeof newContent !== 'object') {
       return res.status(400).json({ success: false, message: 'Data tidak valid' });
     }
-    writeContent(newContent);
-    res.json({ success: true, message: 'Konten berhasil disimpan!', data: newContent });
+    const result = await saveContent(newContent);
+    res.json({
+      success: true,
+      message: result.dbSaved
+        ? 'Konten berhasil disimpan permanen ke database PostgreSQL Betternak!'
+        : 'Konten tersimpan ke file cadangan (PostgreSQL sedang offline)',
+      data: newContent,
+      postgresSaved: result.dbSaved
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

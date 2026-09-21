@@ -1,5 +1,7 @@
 // Betternak Admin Core Script
-const BASE_PATH = window.location.pathname.startsWith('/betternak-admin') ? '/betternak-admin' : '';
+const BASE_PATH = window.location.pathname.startsWith('/betternak-admin')
+  ? '/betternak-admin'
+  : (window.location.pathname.startsWith('/admin') ? '/admin' : '');
 const API_BASE = BASE_PATH + '/api';
 
 let contentData = null;
@@ -76,6 +78,16 @@ async function loadContent() {
     const json = await res.json();
     if (json.success && json.data) {
       contentData = json.data;
+      const dbBadge = document.getElementById('dbBadge');
+      if (dbBadge) {
+        if (json.source === 'postgresql') {
+          dbBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> PostgreSQL: Online';
+          dbBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hidden sm:inline-flex items-center gap-1';
+        } else {
+          dbBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Backup JSON';
+          dbBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 hidden sm:inline-flex items-center gap-1';
+        }
+      }
       renderActiveTab();
     } else {
       showToast('Gagal memuat data konten', true);
@@ -122,7 +134,9 @@ document.getElementById('saveAllBtn').addEventListener('click', async () => {
     });
     const json = await res.json();
     if (json.success) {
-      showToast('Seluruh perubahan berhasil disimpan & disinkronkan!');
+      showToast(json.postgresSaved
+        ? 'Perubahan tersimpan permanen ke PostgreSQL Betternak!'
+        : 'Perubahan tersimpan ke file cadangan!');
     } else {
       showToast('Gagal menyimpan: ' + json.message, true);
     }

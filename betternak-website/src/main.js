@@ -21,13 +21,18 @@ let baseModelX = 0.0;
 const camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(0.0, 0.85, 10.2);
 
+// Detect Mobile Device for Performance Optimization
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
 const renderer = new THREE.WebGLRenderer({
-  antialias: true,
+  antialias: !isMobileDevice, // Disable MSAA on mobile to prevent tile memory bottlenecks
   alpha: true,
-  powerPreference: 'high-performance'
+  powerPreference: 'high-performance',
+  precision: isMobileDevice ? 'mediump' : 'highp'
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+// On mobile, clamp DPR to 1.0 to eliminate retina fill-rate lag; on desktop allow up to 1.5
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1.0 : 1.5));
 renderer.shadowMap.enabled = false;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.45;
@@ -167,6 +172,9 @@ let autoRotate = true;
 // - Grey (abu-abu): piramid, piring, nema mount, kaki
 // - Green (hijau): tutup, sisiatas (silo 10kg opaque), sisibawah, bawah
 // - Slightly glossy finish (roughness 0.25 - 0.32, metalness 0.16 - 0.55)
+// Performance optimization: Solid non-sliced parts use THREE.FrontSide to cull >1.1M triangles!
+const cutawaySide = isMobileDevice ? THREE.FrontSide : THREE.DoubleSide;
+
 const materials = {
   // HIJAU: Tutup Kedap Cuaca
   tutup: new THREE.MeshStandardMaterial({
@@ -174,7 +182,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.18,
     flatShading: false,
-    side: THREE.DoubleSide,
+    side: cutawaySide,
     clippingPlanes: [clipPlane],
     clipShadows: true
   }),
@@ -184,7 +192,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.16,
     flatShading: false,
-    side: THREE.DoubleSide,
+    side: cutawaySide,
     clippingPlanes: [clipPlane],
     clipShadows: true
   }),
@@ -194,7 +202,7 @@ const materials = {
     roughness: 0.26,
     metalness: 0.50,
     flatShading: false,
-    side: THREE.DoubleSide
+    side: THREE.FrontSide
   }),
   // HIJAU: Chute Body Bawah
   sisibawah: new THREE.MeshStandardMaterial({
@@ -202,7 +210,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.16,
     flatShading: false,
-    side: THREE.DoubleSide,
+    side: cutawaySide,
     clippingPlanes: [clipPlane],
     clipShadows: true
   }),
@@ -212,7 +220,7 @@ const materials = {
     roughness: 0.28,
     metalness: 0.45,
     flatShading: false,
-    side: THREE.DoubleSide
+    side: THREE.FrontSide
   }),
   // ABU-ABU: Bracket Motor NEMA
   nemabracket: new THREE.MeshStandardMaterial({
@@ -220,27 +228,23 @@ const materials = {
     roughness: 0.25,
     metalness: 0.55,
     flatShading: false,
-    side: THREE.DoubleSide
+    side: THREE.FrontSide
   }),
-  // HIJAU: Mangkuk Feeder Anti-Tumpah
+  // HIJAU: Mangkuk Feeder Anti-Tumpah (535k triangles - FrontSide saves >500k backfaces)
   bawah: new THREE.MeshStandardMaterial({
     color: 0x0c542c,
     roughness: 0.28,
     metalness: 0.18,
     flatShading: false,
-    side: THREE.DoubleSide,
-    clippingPlanes: [clipPlane],
-    clipShadows: true
+    side: THREE.FrontSide
   }),
-  // ABU-ABU: Kaki Tripod Modular
+  // ABU-ABU: Kaki Tripod Modular (190k triangles - FrontSide saves >190k backfaces)
   kaki: new THREE.MeshStandardMaterial({
     color: 0x334155,
     roughness: 0.32,
     metalness: 0.35,
     flatShading: false,
-    side: THREE.DoubleSide,
-    clippingPlanes: [clipPlane],
-    clipShadows: true
+    side: THREE.FrontSide
   })
 };
 
@@ -596,7 +600,7 @@ function updateGalleryScroll() {
     canvasContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
   }
 
-  isMainCanvasActive = isHardwareVisible;
+  isMainCanvasActive = isHardwareVisible && !isInSmartSection;
 }
 
 let scrollRafPending = false;
@@ -950,8 +954,9 @@ function animate() {
   const rawDelta = clock.getDelta();
   const delta = Math.min(rawDelta, 0.05);
 
-  // Luxurious, velvety smooth inertia (slower and silky smooth)
-  smoothScroll += (targetScroll - smoothScroll) * 0.058;
+  // Responsive lerp on mobile touch screens for instantaneous feel; velvety smooth on desktop
+  const scrollLerp = isMobileDevice ? 0.088 : 0.058;
+  smoothScroll += (targetScroll - smoothScroll) * scrollLerp;
   if (Math.abs(targetScroll - smoothScroll) < 0.0002) {
     smoothScroll = targetScroll;
   }
@@ -1150,8 +1155,8 @@ function animate() {
     }
   }
 
-  controls.update();
   if (isMainCanvasActive) {
+    controls.update();
     renderer.render(scene, camera);
   }
 }
@@ -1227,9 +1232,14 @@ function initCompanionViewer(sourceScene) {
   companionCamera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
   companionCamera.position.set(0, 0.70, 7.8);
 
-  companionRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+  companionRenderer = new THREE.WebGLRenderer({
+    antialias: !isMobileDevice,
+    alpha: true,
+    powerPreference: 'high-performance',
+    precision: isMobileDevice ? 'mediump' : 'highp'
+  });
   companionRenderer.setSize(width, height);
-  companionRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  companionRenderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1.0 : 1.4));
   companionRenderer.outputColorSpace = THREE.SRGBColorSpace;
   companionRenderer.toneMapping = THREE.ACESFilmicToneMapping;
   // Brighter exposure so the 3D model looks clean and vibrant against the light theme
@@ -1303,7 +1313,7 @@ function initCompanionViewer(sourceScene) {
         child.material = child.material.clone();
         child.material.clippingPlanes = [companionClipPlane];
         child.material.clipShadows = true;
-        child.material.side = THREE.DoubleSide; // Clean solid interior when cutaway is active
+        child.material.side = isMobileDevice ? THREE.FrontSide : THREE.DoubleSide; // Save fill rate on mobile
 
         if (child.material.color) {
           const hex = child.material.color.getHex();
