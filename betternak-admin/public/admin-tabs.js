@@ -48,10 +48,14 @@ function renderHeroTab(container) {
           <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Logo Image URL</label>
           <div class="flex gap-2">
             <input type="text" id="inp-logo-url" value="${escapeHtml(g.logo_url||'')}" class="flex-1 px-3 py-2 rounded-xl glass-input text-xs">
-            <label class="px-3 py-2 bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-emerald-300 text-xs font-bold rounded-xl cursor-pointer">
+            <label class="px-3 py-2 bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-emerald-300 text-xs font-bold rounded-xl cursor-pointer shrink-0">
               Upload
               <input type="file" class="hidden" id="upload-logo-inp" accept="image/*">
             </label>
+          </div>
+          <div class="mt-2 flex items-center gap-3">
+            <img id="logo-preview-img" src="${escapeHtml(g.logo_url || '/asset/logoteksbetternak.png')}" class="h-8 max-w-[140px] object-contain bg-slate-900/80 px-2 py-1 rounded-lg border border-white/10" onerror="this.src='/asset/logoteksbetternak.png'">
+            <span class="text-[11px] text-slate-400 font-mono">Live Preview Logo</span>
           </div>
         </div>
         <div>
@@ -71,8 +75,20 @@ function renderHeroTab(container) {
     const res = await uploadFile(e.target.files[0]);
     if (res.success) {
       document.getElementById('inp-logo-url').value = res.url;
-      showToast('Logo berhasil diunggah!');
+      const prev = document.getElementById('logo-preview-img');
+      if (prev) prev.src = res.url;
+      contentData.general = contentData.general || {};
+      contentData.general.logo_url = res.url;
+      showToast('Logo terunggah! Klik Simpan Semua untuk mengaktifkan.');
+    } else {
+      showToast('Gagal unggah: ' + (res.message || 'Error'), true);
     }
+  });
+  document.getElementById('inp-logo-url').addEventListener('input', (e) => {
+    const prev = document.getElementById('logo-preview-img');
+    if (prev) prev.src = e.target.value;
+    contentData.general = contentData.general || {};
+    contentData.general.logo_url = e.target.value;
   });
 }
 
@@ -236,6 +252,8 @@ function renderGalleryTab(container) {
   `;
 
   document.getElementById('addGalItemBtn').addEventListener('click', () => {
+    saveCurrentTabInputs();
+    contentData.gallery.items = contentData.gallery.items || [];
     contentData.gallery.items.push({
       id: Date.now(),
       num: String(contentData.gallery.items.length + 1).padStart(2, '0'),
@@ -249,21 +267,36 @@ function renderGalleryTab(container) {
 
   container.querySelectorAll('.remove-gal-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      contentData.gallery.items.splice(parseInt(btn.getAttribute('data-idx'), 10), 1);
+      saveCurrentTabInputs();
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      contentData.gallery.items.splice(idx, 1);
       renderGalleryTab(container);
+    });
+  });
+
+  container.querySelectorAll('.gal-img-url').forEach((inp) => {
+    inp.addEventListener('input', (e) => {
+      const card = e.target.closest('[data-gal-idx]');
+      if (card) {
+        const img = card.querySelector('img');
+        if (img) img.src = e.target.value;
+      }
     });
   });
 
   container.querySelectorAll('.change-gal-img-inp').forEach((inp) => {
     inp.addEventListener('change', async (e) => {
       if (!e.target.files[0]) return;
+      saveCurrentTabInputs();
       const idx = parseInt(inp.getAttribute('data-idx'), 10);
-      showToast('Mengunggah...');
+      showToast('Mengunggah foto...');
       const res = await uploadFile(e.target.files[0]);
       if (res.success) {
         contentData.gallery.items[idx].image = res.url;
         renderGalleryTab(container);
-        showToast('Foto berhasil diganti!');
+        showToast('Foto berhasil diganti! Klik Simpan Semua untuk menerapkan.');
+      } else {
+        showToast('Gagal unggah: ' + (res.message || 'Error'), true);
       }
     });
   });

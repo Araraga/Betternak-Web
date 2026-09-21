@@ -39,13 +39,38 @@ export async function initDynamicContent() {
   }
 }
 
+export function resolveMediaUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^(https?:|\/\/|data:|blob:)/i.test(trimmed)) {
+    return trimmed;
+  }
+  // Convert /asset/ to ./asset/ so it resolves relative to current base path
+  if (trimmed.startsWith('/asset/')) {
+    return '.' + trimmed;
+  }
+  // Convert /uploads/ to ./uploads/ so it resolves relative to current base path
+  if (trimmed.startsWith('/uploads/')) {
+    return '.' + trimmed;
+  }
+  return trimmed;
+}
+
 function applyContent(c) {
   // 1. General & Meta
   if (c.general) {
     if (c.general.site_title) document.title = c.general.site_title;
     if (c.general.logo_url) {
       const logoEl = document.querySelector('#card-0 img');
-      if (logoEl) logoEl.src = c.general.logo_url;
+      if (logoEl) {
+        logoEl.onerror = () => {
+          if (!logoEl.dataset.hasFallback) {
+            logoEl.dataset.hasFallback = '1';
+            logoEl.src = './asset/logoteksbetternak.png';
+          }
+        };
+        logoEl.src = resolveMediaUrl(c.general.logo_url);
+      }
     }
     if (c.general.footer_desc) {
       const fd = document.querySelector('.betternak-footer p');
@@ -120,19 +145,52 @@ function applyContent(c) {
       if (ss && g.stat.sub) ss.textContent = g.stat.sub;
     }
     if (Array.isArray(g.items)) {
-      const photoFrames = document.querySelectorAll('.gallery-item');
+      const photoFrames = Array.from(document.querySelectorAll('.gallery-item'));
+      
+      // If g.items has more entries than static frames, clone extra frames dynamically
+      if (g.items.length > photoFrames.length && photoFrames.length > 0) {
+        const outroCard = document.querySelector('.gallery-outro-card');
+        const parent = outroCard ? outroCard.parentNode : photoFrames[0].parentNode;
+        for (let i = photoFrames.length; i < g.items.length; i++) {
+          const clone = photoFrames[photoFrames.length - 1].cloneNode(true);
+          clone.className = 'gallery-item item-size-portrait-low';
+          if (outroCard) {
+            parent.insertBefore(clone, outroCard);
+          } else {
+            parent.appendChild(clone);
+          }
+          photoFrames.push(clone);
+        }
+      }
+
       g.items.forEach((item, idx) => {
         if (photoFrames[idx]) {
           const img = photoFrames[idx].querySelector('.gallery-img');
-          if (img && item.image) img.src = item.image;
+          if (img && item.image) {
+            img.onerror = () => {
+              if (!img.dataset.hasFallback) {
+                img.dataset.hasFallback = '1';
+                img.src = './asset/iopakan.png';
+              }
+            };
+            img.src = resolveMediaUrl(item.image);
+          }
+          const numEl = photoFrames[idx].querySelector('.gallery-num');
+          if (numEl) numEl.textContent = item.num || String(idx + 1).padStart(2, '0');
           const tag = photoFrames[idx].querySelector('.gallery-tag');
           if (tag && item.tag) tag.textContent = item.tag;
           const title = photoFrames[idx].querySelector('.gallery-title');
           if (title && item.title) title.textContent = item.title;
           const desc = photoFrames[idx].querySelector('.gallery-desc');
           if (desc && item.desc) desc.textContent = item.desc;
+          photoFrames[idx].style.display = '';
         }
       });
+
+      // Hide extra frames if g.items has fewer items
+      for (let i = g.items.length; i < photoFrames.length; i++) {
+        photoFrames[i].style.display = 'none';
+      }
     }
   }
 

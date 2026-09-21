@@ -35,11 +35,32 @@ const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 const WEBSITE_PUBLIC_CONTENT = path.join(__dirname, '..', 'betternak-website', 'public', 'content.json');
 const WEBSITE_DIST_CONTENT = path.join(__dirname, '..', 'betternak-website', 'dist', 'content.json');
 const WEBSITE_UPLOADS_DIR = path.join(__dirname, '..', 'betternak-website', 'public', 'uploads');
+const WEBSITE_DIST_UPLOADS = path.join(__dirname, '..', 'betternak-website', 'dist', 'uploads');
 
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(WEBSITE_UPLOADS_DIR)) {
   try { fs.mkdirSync(WEBSITE_UPLOADS_DIR, { recursive: true }); } catch (e) {}
 }
+if (!fs.existsSync(WEBSITE_DIST_UPLOADS)) {
+  try { fs.mkdirSync(WEBSITE_DIST_UPLOADS, { recursive: true }); } catch (e) {}
+}
+
+// Auto-sync uploaded files across all web serving directories
+function syncUploadsDirs() {
+  try {
+    if (!fs.existsSync(UPLOADS_DIR)) return;
+    const files = fs.readdirSync(UPLOADS_DIR);
+    for (const f of files) {
+      const src = path.join(UPLOADS_DIR, f);
+      if (!fs.statSync(src).isFile()) continue;
+      const d1 = path.join(WEBSITE_UPLOADS_DIR, f);
+      const d2 = path.join(WEBSITE_DIST_UPLOADS, f);
+      try { if (fs.existsSync(WEBSITE_UPLOADS_DIR) && !fs.existsSync(d1)) fs.copyFileSync(src, d1); } catch (e) {}
+      try { if (fs.existsSync(WEBSITE_DIST_UPLOADS) && !fs.existsSync(d2)) fs.copyFileSync(src, d2); } catch (e) {}
+    }
+  } catch (e) {}
+}
+syncUploadsDirs();
 
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
@@ -251,6 +272,9 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
       if (fs.existsSync(WEBSITE_UPLOADS_DIR)) {
         fs.copyFileSync(req.file.path, path.join(WEBSITE_UPLOADS_DIR, req.file.filename));
       }
+      if (fs.existsSync(WEBSITE_DIST_UPLOADS)) {
+        fs.copyFileSync(req.file.path, path.join(WEBSITE_DIST_UPLOADS, req.file.filename));
+      }
     } catch (e) {}
     res.json({ success: true, message: 'Upload sukses!', url: fileUrl, filename: req.file.filename, size: req.file.size });
   } catch (err) {
@@ -277,6 +301,8 @@ app.delete('/api/images/:filename', (req, res) => {
     if (fs.existsSync(target)) fs.unlinkSync(target);
     const webTarget = path.join(WEBSITE_UPLOADS_DIR, filename);
     if (fs.existsSync(webTarget)) { try { fs.unlinkSync(webTarget); } catch (e) {} }
+    const distTarget = path.join(WEBSITE_DIST_UPLOADS, filename);
+    if (fs.existsSync(distTarget)) { try { fs.unlinkSync(distTarget); } catch (e) {} }
     res.json({ success: true, message: 'File terhapus!' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
