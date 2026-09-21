@@ -330,7 +330,7 @@ function loadFeeder(path) {
       if (loaderText) loaderText.textContent = 'Siap!';
       if (loaderOverlay) {
         loaderOverlay.classList.add('hidden');
-        setTimeout(() => { loaderOverlay.style.display = 'none'; }, 200);
+        setTimeout(() => { loaderOverlay.style.display = 'none'; }, 500);
       }
 
       // Initialize 3D Live Companion Model beside phone
