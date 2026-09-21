@@ -630,7 +630,7 @@ body {
   border-radius: 14px;
 }
 
-/* Loading Screen - Kinetic Betternak Logo Motion Graphic */
+/* Loading Screen - Kinetic Betternak Logo Motion Graphic (GPU-Accelerated & Silky Smooth) */
 #loader-overlay {
   position: fixed;
   inset: 0;
@@ -651,7 +651,6 @@ body {
 .loader-logo-container {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -659,37 +658,43 @@ body {
 /* Ambient Radial Glow */
 .loader-logo-glow {
   position: absolute;
-  width: 260px;
-  height: 260px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 172, 117, 0.3) 0%, rgba(0, 172, 117, 0.08) 45%, transparent 70%);
-  filter: blur(35px);
-  animation: loaderAmbientPulse 3.2s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(0, 200, 136, 0.22) 0%, rgba(0, 172, 117, 0.05) 50%, transparent 70%);
+  filter: blur(40px);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  animation: loaderAmbientPulse 5.4s ease-in-out infinite;
   pointer-events: none;
 }
 
 /* Animated Logo SVG Wrapper */
 .loader-logo-wrap {
   position: relative;
-  width: 125px;
-  height: 165px;
+  width: 135px;
+  height: 178px;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: loaderLogoFloat 3.2s ease-in-out infinite;
+  transform: translateZ(0);
+  will-change: transform;
+  filter: drop-shadow(0 0 16px rgba(0, 172, 117, 0.4));
+  animation: loaderLogoFloat 5.4s ease-in-out infinite;
 }
 
 .loader-logo-svg {
   width: 100%;
   height: 100%;
   overflow: visible;
+  transform: translateZ(0);
 }
 
 /* Blueprint / Track Layer */
 .loader-path-track {
   fill: none;
-  stroke: rgba(0, 172, 117, 0.14);
-  stroke-width: 8;
+  stroke: rgba(0, 172, 117, 0.12);
+  stroke-width: 10;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
@@ -698,10 +703,13 @@ body {
 .loader-path-fill {
   fill: url(#betternakFill);
   stroke: none;
-  animation: loaderFillCycle 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  opacity: 0;
+  transform: translateZ(0);
+  will-change: opacity;
+  animation: loaderFillCycle 5.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-/* Kinetic Animated Drawing Stroke */
+/* Kinetic Animated Drawing Stroke - Pure GPU Path Animation */
 .loader-path-stroke {
   fill: none;
   stroke: url(#betternakStroke);
@@ -710,63 +718,30 @@ body {
   stroke-linejoin: round;
   stroke-dasharray: 3380;
   stroke-dashoffset: 3380;
-  animation: loaderStrokeDraw 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  filter: drop-shadow(0 0 12px rgba(0, 172, 117, 0.8));
-}
-
-/* Luminous Shimmer / Comet Head */
-.loader-path-shimmer {
-  fill: none;
-  stroke: #a7f3d0;
-  stroke-width: 18;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 220 3160;
-  stroke-dashoffset: 3380;
-  animation: loaderShimmerLead 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  filter: drop-shadow(0 0 16px #ffffff);
+  transform: translateZ(0);
+  will-change: stroke-dashoffset, opacity;
+  animation: loaderStrokeDraw 5.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes loaderStrokeDraw {
   0% {
     stroke-dashoffset: 3380;
-    opacity: 0.3;
+    opacity: 0;
   }
-  10% {
+  6% {
     opacity: 1;
   }
-  50% {
+  52% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  74% {
+  78% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
   92% {
     stroke-dashoffset: -3380;
-    opacity: 0.4;
-  }
-  100% {
-    stroke-dashoffset: -3380;
-    opacity: 0;
-  }
-}
-
-@keyframes loaderShimmerLead {
-  0% {
-    stroke-dashoffset: 3380;
-    opacity: 0;
-  }
-  8% {
-    opacity: 0.95;
-  }
-  50% {
-    stroke-dashoffset: 0;
-    opacity: 0.95;
-  }
-  58% {
-    opacity: 0;
+    opacity: 0.15;
   }
   100% {
     stroke-dashoffset: -3380;
@@ -775,84 +750,38 @@ body {
 }
 
 @keyframes loaderFillCycle {
-  0%, 35% {
+  0%, 40% {
     opacity: 0;
-    transform: scale(0.98);
-    transform-origin: center;
   }
-  52% {
-    opacity: 0.45;
+  54% {
+    opacity: 0.65;
   }
-  64%, 78% {
+  64%, 80% {
     opacity: 1;
-    transform: scale(1.02);
-    transform-origin: center;
-    filter: drop-shadow(0 0 26px rgba(0, 172, 117, 0.85));
   }
   92%, 100% {
     opacity: 0;
-    transform: scale(0.98);
-    transform-origin: center;
   }
 }
 
 @keyframes loaderLogoFloat {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) translateZ(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-8px) translateZ(0);
   }
 }
 
 @keyframes loaderAmbientPulse {
   0%, 100% {
-    transform: scale(0.9);
+    transform: scale(0.92) translateZ(0);
     opacity: 0.4;
   }
-  55%, 75% {
-    transform: scale(1.2);
+  55%, 80% {
+    transform: scale(1.18) translateZ(0);
     opacity: 0.85;
   }
-}
-
-/* Minimalist Progress Bar */
-.loader-progress-container {
-  width: 130px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  margin-top: 30px;
-  overflow: hidden;
-  position: relative;
-}
-
-#loader-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #00ac75, #34d399);
-  border-radius: 999px;
-  box-shadow: 0 0 10px rgba(0, 172, 117, 0.6);
-  transition: width 0.3s ease;
-}
-
-.loader-progress-pulse {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.8), transparent);
-  animation: loaderBarSweep 1.8s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes loaderBarSweep {
-  0% { left: -40%; }
-  100% { left: 100%; }
 }
 
 .font-display { font-family: var(--font-display); }
