@@ -630,158 +630,183 @@ body {
   border-radius: 14px;
 }
 
-/* Loading Screen - Kinetic Betternak Logo Motion Graphic (GPU-Accelerated & Silky Smooth) */
+/* =========================================================================
+   BETTERNAK KINETIC FULL LOGO PRELOADER (SILKY SMOOTH 60FPS GPU ACCELERATED)
+   ========================================================================= */
 #loader-overlay {
   position: fixed;
   inset: 0;
-  background: #090e14;
-  z-index: 100;
+  background: #080d13;
+  z-index: 99999;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0);
 }
+
 #loader-overlay.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transform: scale(1.04) translateZ(0);
 }
 
-.loader-logo-container {
+.loader-content {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  transform: translateZ(0);
 }
 
-/* Ambient Radial Glow */
-.loader-logo-glow {
+/* Ambient Radial Emerald Aura */
+.loader-ambient-glow {
   position: absolute;
-  width: 280px;
+  width: 520px;
   height: 280px;
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.12) 45%, rgba(8, 13, 19, 0) 75%);
+  filter: blur(48px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 200, 136, 0.22) 0%, rgba(0, 172, 117, 0.05) 50%, transparent 70%);
-  filter: blur(40px);
+  pointer-events: none;
   transform: translateZ(0);
   will-change: transform, opacity;
-  animation: loaderAmbientPulse 5.4s ease-in-out infinite;
-  pointer-events: none;
+  animation: loaderAuraPulse 3.4s ease-in-out infinite alternate;
 }
 
-/* Animated Logo SVG Wrapper */
-.loader-logo-wrap {
+@keyframes loaderAuraPulse {
+  0% {
+    transform: scale(0.85) translateZ(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.15) translateZ(0);
+    opacity: 0.85;
+  }
+}
+
+/* Kinetic Logo Stage */
+.loader-logo-stage {
   position: relative;
-  width: 135px;
-  height: 178px;
+  width: 310px;
+  max-width: 80vw;
   display: flex;
   align-items: center;
   justify-content: center;
   transform: translateZ(0);
   will-change: transform;
-  filter: drop-shadow(0 0 16px rgba(0, 172, 117, 0.4));
-  animation: loaderLogoFloat 5.4s ease-in-out infinite;
-}
-
-.loader-logo-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  transform: translateZ(0);
-}
-
-/* Blueprint / Track Layer */
-.loader-path-track {
-  fill: none;
-  stroke: rgba(0, 172, 117, 0.12);
-  stroke-width: 10;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
-/* Luminous Solid Fill Layer */
-.loader-path-fill {
-  fill: url(#betternakFill);
-  stroke: none;
-  opacity: 0;
-  transform: translateZ(0);
-  will-change: opacity;
-  animation: loaderFillCycle 5.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-/* Kinetic Animated Drawing Stroke - Pure GPU Path Animation */
-.loader-path-stroke {
-  fill: none;
-  stroke: url(#betternakStroke);
-  stroke-width: 16;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 3380;
-  stroke-dashoffset: 3380;
-  transform: translateZ(0);
-  will-change: stroke-dashoffset, opacity;
-  animation: loaderStrokeDraw 5.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes loaderStrokeDraw {
-  0% {
-    stroke-dashoffset: 3380;
-    opacity: 0;
-  }
-  6% {
-    opacity: 1;
-  }
-  52% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-  78% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-  92% {
-    stroke-dashoffset: -3380;
-    opacity: 0.15;
-  }
-  100% {
-    stroke-dashoffset: -3380;
-    opacity: 0;
-  }
-}
-
-@keyframes loaderFillCycle {
-  0%, 40% {
-    opacity: 0;
-  }
-  54% {
-    opacity: 0.65;
-  }
-  64%, 80% {
-    opacity: 1;
-  }
-  92%, 100% {
-    opacity: 0;
-  }
+  animation: loaderLogoFloat 3.4s ease-in-out infinite alternate;
 }
 
 @keyframes loaderLogoFloat {
-  0%, 100% {
-    transform: translateY(0px) translateZ(0);
+  0% {
+    transform: translateY(0px) scale(0.985) translateZ(0);
   }
-  50% {
-    transform: translateY(-8px) translateZ(0);
+  100% {
+    transform: translateY(-5px) scale(1.015) translateZ(0);
   }
 }
 
-@keyframes loaderAmbientPulse {
-  0%, 100% {
-    transform: scale(0.92) translateZ(0);
-    opacity: 0.4;
+/* Base Full Logo Image */
+.loader-logo-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.42));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Kinetic Specular Shimmer Sheen */
+.loader-shimmer-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  overflow: hidden;
+}
+
+.loader-shimmer-beam {
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 70%;
+  height: 200%;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 30%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.2) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(22deg) translateZ(0);
+  animation: loaderShimmerPass 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+}
+
+@keyframes loaderShimmerPass {
+  0% {
+    transform: translateX(-150%) rotate(22deg) translateZ(0);
+    opacity: 0;
   }
-  55%, 80% {
-    transform: scale(1.18) translateZ(0);
-    opacity: 0.85;
+  12% {
+    opacity: 1;
   }
+  70% {
+    opacity: 1;
+  }
+  85%, 100% {
+    transform: translateX(360%) rotate(22deg) translateZ(0);
+    opacity: 0;
+  }
+}
+
+/* Minimalist Status Indicator */
+.loader-status-wrap {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.loader-status-text {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #6ee7b7;
+  opacity: 0.85;
+  animation: loaderTextPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes loaderTextPulse {
+  0% { opacity: 0.55; }
+  100% { opacity: 0.95; }
+}
+
+.loader-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981, 0 0 16px #34d399;
+  animation: loaderDotBlink 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes loaderDotBlink {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.25); opacity: 1; }
 }
 
 .font-display { font-family: var(--font-display); }
