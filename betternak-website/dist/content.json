@@ -2,8 +2,8 @@
   "general": {
     "site_title": "Betternak • IoPakan Smart Feeder",
     "logo_url": "/asset/logoteksbetternak.png",
-    "ready_badge": "Ready Stock 2026",
-    "warranty_badge": "Garansi 1 Tahun",
+    "ready_badge": "",
+    "warranty_badge": "",
     "footer_desc": "Pemberi pakan ayam otomatis berbasis IoT dengan rekayasa gravitasi presisi, kapasitas 10kg, dan motor torsi teruji untuk kandang peternakan modern Indonesia.",
     "copyright": "© 2026 Betternak Ecosystem. Hak Cipta Dilindungi Undang-Undang."
   },
@@ -116,11 +116,11 @@
     { "label": "Daya", "value": "12V DC Adapter / Baterai Cadangan 18650" }
   ],
   "contact": {
-    "whatsapp_number": "6281234567890",
+    "whatsapp_number": "6283197391127",
     "whatsapp_button_text": "Hubungi WhatsApp",
     "whatsapp_message": "Halo Admin Betternak, saya ingin konsultasi dan pemesanan IoPakan Smart Feeder.",
     "email": "info@betternak.com",
-    "phone": "+62 812-3456-7890",
+    "phone": "+62 831-9739-1127",
     "address": "Semarang & Banyumas, Jawa Tengah, Indonesia",
     "hours": "Senin - Sabtu: 08:00 - 17:00 WIB"
   }

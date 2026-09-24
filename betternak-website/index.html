@@ -144,9 +144,6 @@
   <!-- Loading Screen - Kinetic Betternak Full Logo Preloader (60FPS GPU) -->
   <div id="loader-overlay">
     <div class="loader-content">
-      <!-- Ambient Radial Emerald Aura -->
-      <div class="loader-ambient-glow"></div>
-
       <!-- Betternak Full Brand Logo Stage -->
       <div class="loader-logo-stage">
         <!-- High-Fidelity Base Brand Logo -->
@@ -159,13 +156,6 @@
         <div class="loader-shimmer-mask" style="-webkit-mask-image: url('./asset/logoteksbetternak.png'); mask-image: url('./asset/logoteksbetternak.png');">
           <div class="loader-shimmer-beam"></div>
         </div>
-      </div>
-
-      <!-- Sleek Minimalist Status Tagline -->
-      <div class="loader-status-wrap">
-        <span class="loader-status-dot"></span>
-        <span id="loader-text" class="loader-status-text">Memuat Sistem</span>
-        <span class="loader-status-dot"></span>
       </div>
     </div>
   </div>
@@ -315,22 +305,14 @@
         
         <!-- INTRO BLOCK -->
         <div class="gallery-intro-card gallery-kinetic-text">
-          <div class="gallery-intro-badge">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Dokumentasi Riset &amp; Perakitan
-          </div>
-          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 leading-[1.1] mt-3 mb-2">
+          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 leading-[1.1] mb-2">
             Galeri Nyata <br/>
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600">IoPakan</span>
           </h2>
           <div class="gallery-reveal-line"></div>
-          <p class="text-slate-600 text-base md:text-lg leading-relaxed max-w-sm mb-6">
+          <p class="text-slate-600 text-base md:text-lg leading-relaxed max-w-sm">
             Hasil dokumentasi nyata dari tahap perakitan presisi, uji mekanisme dosing, hingga implementasi di kandang ayam peternak mitra.
           </p>
-          <div class="flex items-center gap-3 text-xs font-mono text-emerald-600 uppercase tracking-widest font-semibold">
-            <span>Scroll Untuk Jelajahi</span>
-            <svg class="w-4 h-4 animate-bounce-x" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-          </div>
         </div>
 
         <!-- PHOTO 1: TALL PORTRAIT (gallery-1.jpg) -->
@@ -339,7 +321,6 @@
             <img src="./asset/gallery-1.jpg" alt="Perakitan Silo IoPakan" class="gallery-img" loading="lazy" />
             <div class="gallery-overlay-vignette"></div>
             <div class="gallery-caption-clean gallery-kinetic-text">
-              <div class="gallery-num">01</div>
               <div class="gallery-info">
                 <span class="gallery-tag">Fabrikasi &amp; Perakitan</span>
                 <h4 class="gallery-title">Konstruksi Silo 10KG</h4>
@@ -356,7 +337,6 @@
             <img src="./asset/gallery-2.jpg" alt="Detail Mekanik IoPakan" class="gallery-img" loading="lazy" />
             <div class="gallery-overlay-vignette"></div>
             <div class="gallery-caption-clean gallery-kinetic-text">
-              <div class="gallery-num">02</div>
               <div class="gallery-info">
                 <span class="gallery-tag">Mekanisme Presisi</span>
                 <h4 class="gallery-title">Kalibrasi Piringan Dosing</h4>
@@ -383,7 +363,6 @@
             <img src="./asset/gallery-3.jpg" alt="Uji Komponen IoPakan" class="gallery-img" loading="lazy" />
             <div class="gallery-overlay-vignette"></div>
             <div class="gallery-caption-clean gallery-kinetic-text">
-              <div class="gallery-num">03</div>
               <div class="gallery-info">
                 <span class="gallery-tag">Struktur Modular</span>
                 <h4 class="gallery-title">Kaki Tripod Adaptif</h4>
@@ -400,7 +379,6 @@
             <img src="./asset/gallery-4.jpg" alt="Uji Sebaran Pakan" class="gallery-img" loading="lazy" />
             <div class="gallery-overlay-vignette"></div>
             <div class="gallery-caption-clean gallery-kinetic-text">
-              <div class="gallery-num">04</div>
               <div class="gallery-info">
                 <span class="gallery-tag">Uji Laboratorium</span>
                 <h4 class="gallery-title">Aliran Bebas Gumpal 360&deg;</h4>
@@ -425,7 +403,6 @@
             <img src="./asset/gallery-5.jpg" alt="Implementasi Kandang Peternak" class="gallery-img" loading="lazy" />
             <div class="gallery-overlay-vignette"></div>
             <div class="gallery-caption-clean gallery-kinetic-text">
-              <div class="gallery-num">05</div>
               <div class="gallery-info">
                 <span class="gallery-tag">Implementasi Mitra</span>
                 <h4 class="gallery-title">Uji Lapangan Kandang Broiler</h4>
@@ -442,7 +419,6 @@
             <img src="./asset/gallery-6.jpg" alt="Batch Produksi Siap Kirim" class="gallery-img" loading="lazy" />
             <div class="gallery-overlay-vignette"></div>
             <div class="gallery-caption-clean gallery-kinetic-text">
-              <div class="gallery-num">06</div>
               <div class="gallery-info">
                 <span class="gallery-tag">Final Quality Check</span>
                 <h4 class="gallery-title">Unit Siap Distribusi</h4>
@@ -746,10 +722,6 @@
           <p class="text-slate-400 text-sm mt-3 max-w-md leading-relaxed">
             Pemberi pakan ayam otomatis berbasis IoT dengan rekayasa gravitasi presisi, kapasitas 10kg, dan motor torsi teruji untuk kandang peternakan modern Indonesia.
           </p>
-          <div class="mt-5 flex items-center gap-3">
-            <span class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono">Ready Stock 2026</span>
-            <span class="px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-xs font-mono">Garansi 1 Tahun</span>
-          </div>
         </div>
 
         <div>
@@ -766,7 +738,7 @@
         <div>
           <h5 class="text-xs uppercase font-mono tracking-widest text-slate-300 font-bold mb-3">Pemesanan &amp; Kemitraan</h5>
           <p class="text-xs text-slate-400 mb-4 leading-relaxed">Konsultasi instalasi kandang gratis bersama tim teknis Betternak.</p>
-          <a href="https://wa.me/6281234567890" target="_blank" class="btn-primary text-xs w-full justify-center">
+          <a href="https://wa.me/6283197391127" target="_blank" class="btn-primary text-xs w-full justify-center">
             Hubungi WhatsApp
           </a>
         </div>

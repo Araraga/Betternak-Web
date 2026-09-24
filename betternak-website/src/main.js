@@ -1364,7 +1364,7 @@ function initCompanionViewer(sourceScene) {
     if (!isCompanionInView || !companionRenderer) return;
     companionControls.update();
     if (isCompanionSpinning && companionPiring) {
-      companionPiring.rotation.y += 0.22;
+      companionPiring.rotation.y += 0.04;
     }
     companionRenderer.render(companionScene, companionCamera);
   }

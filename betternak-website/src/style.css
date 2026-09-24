@@ -662,29 +662,9 @@ body {
   transform: translateZ(0);
 }
 
-/* Ambient Radial Emerald Aura */
+/* Ambient Radial Emerald Aura - Disabled */
 .loader-ambient-glow {
-  position: absolute;
-  width: 520px;
-  height: 280px;
-  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.12) 45%, rgba(8, 13, 19, 0) 75%);
-  filter: blur(48px);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translateZ(0);
-  will-change: transform, opacity;
-  animation: loaderAuraPulse 3.4s ease-in-out infinite alternate;
-}
-
-@keyframes loaderAuraPulse {
-  0% {
-    transform: scale(0.85) translateZ(0);
-    opacity: 0.4;
-  }
-  100% {
-    transform: scale(1.15) translateZ(0);
-    opacity: 0.85;
-  }
+  display: none !important;
 }
 
 /* Kinetic Logo Stage */
@@ -715,7 +695,7 @@ body {
   height: auto;
   display: block;
   object-fit: contain;
-  filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.42));
+  filter: none !important;
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -969,23 +949,6 @@ body {
   align-items: center;
 }
 
-/* Atmospheric Soft Feather on Top Edge of Gallery Viewport */
-.gallery-sticky-viewport::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 90px;
-  background: linear-gradient(to bottom, rgba(6, 9, 13, 0.92) 0%, rgba(6, 9, 13, 0.4) 50%, transparent 100%);
-  z-index: 2;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-.bright-gallery-theme .gallery-sticky-viewport::before {
-  opacity: 0;
-}
-
 .gallery-track {
   position: relative;
   z-index: 3;
@@ -1084,13 +1047,7 @@ body {
 }
 
 .gallery-num {
-  font-family: var(--font-display);
-  font-size: 38px;
-  font-weight: 900;
-  line-height: 1;
-  color: #34d399;
-  text-shadow: 0 0 20px rgba(52, 211, 153, 0.65);
-  opacity: 0.95;
+  display: none !important;
 }
 
 .gallery-info {

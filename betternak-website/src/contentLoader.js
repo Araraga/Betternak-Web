@@ -176,7 +176,7 @@ function applyContent(c) {
             img.src = resolveMediaUrl(item.image);
           }
           const numEl = photoFrames[idx].querySelector('.gallery-num');
-          if (numEl) numEl.textContent = item.num || String(idx + 1).padStart(2, '0');
+          if (numEl) numEl.remove();
           const tag = photoFrames[idx].querySelector('.gallery-tag');
           if (tag && item.tag) tag.textContent = item.tag;
           const title = photoFrames[idx].querySelector('.gallery-title');
@@ -197,7 +197,7 @@ function applyContent(c) {
   // 5. WhatsApp & Contact CTA
   if (c.contact) {
     const wa = c.contact;
-    const phone = (wa.whatsapp_number || '6281234567890').replace(/[^0-9]/g, '');
+    const phone = (wa.whatsapp_number || '6283197391127').replace(/[^0-9]/g, '');
     const msg = encodeURIComponent(wa.whatsapp_message || 'Halo Admin Betternak');
     const waLink = `https://wa.me/${phone}?text=${msg}`;
 
