@@ -847,40 +847,6 @@ body {
   color: #0f172a;
 }
 
-/* Animated Iridescent Oil Contour Lines Overlay */
-.gallery-oil-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.85;
-}
-.gallery-oil-svg {
-  position: sticky;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  will-change: transform;
-}
-.oil-contour-line {
-  stroke-dasharray: 2400;
-  stroke-dashoffset: 0;
-  animation: oilContourDrift 18s ease-in-out infinite alternate;
-}
-.oil-line-1 { animation-duration: 22s; animation-delay: 0s; }
-.oil-line-2 { animation-duration: 17s; animation-delay: -3s; }
-.oil-line-3 { animation-duration: 25s; animation-delay: -6s; }
-.oil-line-4 { animation-duration: 20s; animation-delay: -2s; }
-.oil-line-5 { animation-duration: 28s; animation-delay: -5s; }
-.oil-line-6 { animation-duration: 19s; animation-delay: -8s; }
-
-@keyframes oilContourDrift {
-  0% { transform: translateY(0) scaleY(1); }
-  50% { transform: translateY(-24px) scaleY(1.03); }
-  100% { transform: translateY(20px) scaleY(0.97); }
-}
-
 /* Default Dark Gallery Intro Typography */
 .gallery-intro-card h2 {
   color: #ffffff;

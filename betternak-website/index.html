@@ -184,45 +184,8 @@
 
   </div> <!-- /story-cards-container -->
 
-  <!-- GALLERY SECTION: HORIZONTAL PINNED SCROLL WITH REAL ASSET PHOTOS & ANIMATED OIL LINES -->
+  <!-- GALLERY SECTION: HORIZONTAL PINNED SCROLL WITH REAL ASSET PHOTOS -->
   <section id="gallery-pin-container" class="gallery-pin-container">
-    <!-- Animated Iridescent Oil Contour Lines Overlay -->
-    <div class="gallery-oil-bg pointer-events-none">
-      <svg class="gallery-oil-svg" width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="oilGradEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#10b981" stop-opacity="0.32" />
-            <stop offset="35%" stop-color="#06b6d4" stop-opacity="0.28" />
-            <stop offset="70%" stop-color="#8b5cf6" stop-opacity="0.22" />
-            <stop offset="100%" stop-color="#10b981" stop-opacity="0.3" />
-          </linearGradient>
-          <linearGradient id="oilGradCyan" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.3" />
-            <stop offset="50%" stop-color="#10b981" stop-opacity="0.25" />
-            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.22" />
-          </linearGradient>
-          <linearGradient id="oilGradAmber" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25" />
-            <stop offset="50%" stop-color="#ec4899" stop-opacity="0.2" />
-            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.25" />
-          </linearGradient>
-          <filter id="oilGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <path class="oil-contour-line oil-line-1" d="M -100,120 C 350,40 700,220 1150,110 C 1500,20 1750,180 2100,90" fill="none" stroke="url(#oilGradEmerald)" stroke-width="2.2" filter="url(#oilGlow)" />
-        <path class="oil-contour-line oil-line-2" d="M -150,280 C 400,160 820,380 1280,240 C 1620,130 1850,310 2150,220" fill="none" stroke="url(#oilGradCyan)" stroke-width="2.0" />
-        <path class="oil-contour-line oil-line-3" d="M -120,460 C 320,310 760,560 1200,410 C 1580,280 1820,470 2120,380" fill="none" stroke="url(#oilGradAmber)" stroke-width="2.2" />
-        <path class="oil-contour-line oil-line-4" d="M -100,640 C 450,520 890,720 1350,580 C 1700,460 1900,630 2200,550" fill="none" stroke="url(#oilGradEmerald)" stroke-width="2.0" filter="url(#oilGlow)" />
-        <path class="oil-contour-line oil-line-5" d="M -150,820 C 380,680 840,910 1310,760 C 1680,640 1860,820 2180,740" fill="none" stroke="url(#oilGradCyan)" stroke-width="2.2" />
-        <path class="oil-contour-line oil-line-6" d="M -100,960 C 420,840 880,1040 1380,900 C 1720,790 1920,950 2220,890" fill="none" stroke="url(#oilGradAmber)" stroke-width="1.8" />
-      </svg>
-    </div>
-
     <div class="gallery-sticky-viewport">
       <!-- Crossfade Background Layers: Seamlessly matches dark cinema then transitions to ivory white (#f8fafc) -->
       <div class="gallery-bg-dark pointer-events-none"></div>
