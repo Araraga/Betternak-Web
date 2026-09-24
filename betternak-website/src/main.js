@@ -73,33 +73,41 @@ function initFluidGlassBackground() {
     uniform vec2 u_resolution;
     uniform float u_time;
     uniform float u_scroll;
+    uniform float u_velocity;
 
     void main() {
       vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
       uv.x *= 1.15;
 
-      // Looping fluid flow speed with subtle scroll responsiveness
-      float t = u_time * 0.32 + u_scroll * 1.5;
+      // Dynamic physical fluid response to scroll inertia & velocity
+      float surge = clamp(u_velocity * 0.45, -0.65, 0.65);
+      float speedBoost = abs(u_velocity) * 2.2;
+      float t = u_time * (0.28 + speedBoost) + u_scroll * 3.8;
 
-      // Stream 1: Upper graceful fluid metallic glass ribbon
-      float w1 = 0.090 + 0.035 * sin(uv.x * 2.2 + t * 1.4);
-      float wave1 = sin(uv.x * 1.8 + t * 0.75) * 0.22 + cos(uv.x * 3.2 - t * 0.6) * 0.08;
-      float d1 = (uv.y - (0.16 + wave1)) / w1;
+      // Stream 1: Upper graceful ribbon, bends and surges with scroll
+      float wave1 = sin(uv.x * (1.8 + u_scroll * 0.7) + t * 0.8) * (0.20 + abs(surge) * 0.14) 
+                  + cos(uv.x * 3.2 - t * 0.6 + u_scroll * 1.8) * 0.08
+                  + surge * 0.25;
+      float w1 = 0.085 + 0.035 * sin(uv.x * 2.2 + t * 1.4) + abs(surge) * 0.04;
+      float d1 = (uv.y - (0.16 - u_scroll * 0.25 + wave1)) / w1;
 
-      // Stream 2: Lower sweeping fluid metallic glass ribbon
-      float w2 = 0.080 + 0.030 * cos(uv.x * 2.5 - t * 1.1);
-      float wave2 = sin(uv.x * 1.6 - t * 0.65 + 1.2) * 0.25 + sin(uv.x * 3.6 + t * 0.85) * 0.06;
-      float d2 = (uv.y - (-0.24 + wave2)) / w2;
+      // Stream 2: Lower sweeping ribbon, counter-undulates on scroll
+      float wave2 = sin(uv.x * (1.5 - u_scroll * 0.4) - t * 0.7 + 1.2) * (0.24 + abs(surge) * 0.12)
+                  + sin(uv.x * 3.6 + t * 0.9) * 0.06
+                  - surge * 0.22;
+      float w2 = 0.075 + 0.030 * cos(uv.x * 2.5 - t * 1.1) + abs(surge) * 0.035;
+      float d2 = (uv.y - (-0.22 + u_scroll * 0.30 + wave2)) / w2;
 
-      // Stream 3: Diagonal crossing liquid glass stream
-      float w3 = 0.060 + 0.025 * sin(uv.x * 2.8 + t * 1.2);
-      float wave3 = cos(uv.x * 1.9 + t * 0.5 - 0.7) * 0.28;
-      float d3 = (uv.y - (0.36 + wave3)) / w3;
+      // Stream 3: Diagonal crossing stream that tilts and twists with scroll progress
+      float twist = sin(u_scroll * 3.14159) * 0.25;
+      float wave3 = cos(uv.x * 2.0 + t * 0.5 - 0.7 + twist) * 0.26 + surge * 0.18;
+      float w3 = 0.055 + 0.025 * sin(uv.x * 2.8 + t * 1.2);
+      float d3 = (uv.y - (0.32 - u_scroll * 0.35 + wave3)) / w3;
 
-      // Stream 4: Subtle secondary ribbon in lower quadrant
-      float w4 = 0.055 + 0.020 * cos(uv.x * 3.1 - t * 0.9);
-      float wave4 = sin(uv.x * 2.2 - t * 0.8 - 1.5) * 0.20;
-      float d4 = (uv.y - (-0.42 + wave4)) / w4;
+      // Stream 4: Dynamic responsive fluid stream accent
+      float wave4 = sin(uv.x * 2.4 - t * 0.85 - 1.5 + u_scroll * 2.5) * (0.18 + abs(surge) * 0.10);
+      float w4 = 0.050 + 0.020 * cos(uv.x * 3.1 - t * 0.9);
+      float d4 = (uv.y - (-0.38 + u_scroll * 0.20 + wave4)) / w4;
 
       float ad1 = abs(d1);
       float ad2 = abs(d2);
@@ -117,44 +125,43 @@ function initFluidGlassBackground() {
         return;
       }
 
-      // Cross-sectional parabolic curvature for 3D liquid tube volume
       float h1 = in1 > 0.0 ? sqrt(max(0.0, 1.0 - ad1 * ad1)) : 0.0;
       float h2 = in2 > 0.0 ? sqrt(max(0.0, 1.0 - ad2 * ad2)) : 0.0;
       float h3 = in3 > 0.0 ? sqrt(max(0.0, 1.0 - ad3 * ad3)) : 0.0;
       float h4 = in4 > 0.0 ? sqrt(max(0.0, 1.0 - ad4 * ad4)) : 0.0;
 
-      // Surface ripples traveling along the fluid streams
-      float rip1 = sin(uv.x * 14.0 - t * 4.2 + d1 * 4.5) * 0.14 * h1;
-      float rip2 = cos(uv.x * 12.0 + t * 3.8 + d2 * 4.2) * 0.14 * h2;
-      float rip3 = sin(uv.x * 16.0 - t * 5.0 + d3 * 4.5) * 0.14 * h3;
-      float rip4 = cos(uv.x * 15.0 + t * 4.0 + d4 * 4.0) * 0.14 * h4;
+      // Excitement of ripples proportionally scaling with scroll movement
+      float excitation = 1.0 + abs(u_velocity) * 4.5;
+      float rip1 = sin(uv.x * 14.0 - t * (4.0 + excitation) + d1 * 4.5) * (0.13 * h1 * excitation);
+      float rip2 = cos(uv.x * 12.0 + t * (3.5 + excitation) + d2 * 4.2) * (0.13 * h2 * excitation);
+      float rip3 = sin(uv.x * 16.0 - t * (4.8 + excitation) + d3 * 4.5) * (0.13 * h3 * excitation);
+      float rip4 = cos(uv.x * 15.0 + t * (3.8 + excitation) + d4 * 4.0) * (0.13 * h4 * excitation);
 
       float totalH = max(h1 + rip1, max(h2 + rip2, max(h3 + rip3, h4 + rip4)));
 
-      // Surface normal approximation
       float dHdx = 0.0;
       float dHdy = 0.0;
       if (in1 > 0.0) {
         dHdy += -d1 * 2.5 / max(0.1, h1);
-        dHdx += (cos(uv.x * 1.8 + t * 0.75) * 0.39) * 1.5;
+        dHdx += (cos(uv.x * (1.8 + u_scroll * 0.7) + t * 0.8) * 0.39) * 1.5;
       }
       if (in2 > 0.0) {
         dHdy += -d2 * 2.5 / max(0.1, h2);
-        dHdx += (cos(uv.x * 1.6 - t * 0.65 + 1.2) * 0.39) * 1.5;
+        dHdx += (cos(uv.x * (1.5 - u_scroll * 0.4) - t * 0.7 + 1.2) * 0.39) * 1.5;
       }
       if (in3 > 0.0) {
         dHdy += -d3 * 2.5 / max(0.1, h3);
-        dHdx += (-sin(uv.x * 1.9 + t * 0.5 - 0.7) * 0.53) * 1.5;
+        dHdx += (-sin(uv.x * 2.0 + t * 0.5 - 0.7 + twist) * 0.53) * 1.5;
       }
       if (in4 > 0.0) {
         dHdy += -d4 * 2.5 / max(0.1, h4);
-        dHdx += (cos(uv.x * 2.2 - t * 0.8 - 1.5) * 0.44) * 1.5;
+        dHdx += (cos(uv.x * 2.4 - t * 0.85 - 1.5 + u_scroll * 2.5) * 0.44) * 1.5;
       }
 
       vec3 N = normalize(vec3(dHdx * 0.85, dHdy * 0.85, 1.0));
       vec3 V = vec3(0.0, 0.0, 1.0);
 
-      // Specular studio lights (Platinum Silver, Emerald Sheen, Cyan Glint)
+      // Specular lights
       vec3 L_silver = normalize(vec3(-0.45, 0.75, 0.7));
       vec3 L_emerald = normalize(vec3(0.65, -0.40, 0.6));
       vec3 L_cyan = normalize(vec3(0.20, 0.85, 0.5));
@@ -163,10 +170,8 @@ function initFluidGlassBackground() {
       float specEmerald = pow(max(0.0, dot(N, normalize(L_emerald + V))), 26.0);
       float specCyan = pow(max(0.0, dot(N, normalize(L_cyan + V))), 28.0);
 
-      // Fresnel refraction on glass ribbon edges
       float fresnel = pow(1.0 - max(0.0, dot(N, V)), 2.8);
 
-      // Fluid glass metallic color palette
       vec3 colSilver = vec3(0.92, 0.96, 1.0);
       vec3 colEmerald = vec3(0.12, 0.82, 0.56);
       vec3 colCyan = vec3(0.22, 0.76, 0.95);
@@ -178,13 +183,10 @@ function initFluidGlassBackground() {
       streamCol += colCyan * (specCyan * 0.75);
       streamCol += mix(colSilver, colCyan, 0.35) * (fresnel * 0.90);
 
-      // Caustic flow within the fluid glass
       float caustic = pow(max(0.0, sin((uv.x + uv.y) * 14.0 + t * 3.2)), 5.0) * 0.35;
       streamCol += colEmerald * caustic;
 
-      // Smooth alpha fade
       float finalAlpha = alpha * 0.85;
-
       gl_FragColor = vec4(streamCol * finalAlpha, finalAlpha);
     }
   `;
@@ -227,6 +229,7 @@ function initFluidGlassBackground() {
   const uRes = gl.getUniformLocation(prog, 'u_resolution');
   const uTime = gl.getUniformLocation(prog, 'u_time');
   const uScroll = gl.getUniformLocation(prog, 'u_scroll');
+  const uVelocity = gl.getUniformLocation(prog, 'u_velocity');
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
@@ -242,13 +245,14 @@ function initFluidGlassBackground() {
   resize();
 
   return {
-    render(time, scroll) {
+    render(time, scroll, velocity) {
       gl.clearColor(0.0, 0.0, 0.0, 0.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, time);
       gl.uniform1f(uScroll, scroll);
+      gl.uniform1f(uVelocity, velocity || 0.0);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
   };
@@ -818,9 +822,14 @@ function updateGalleryScroll() {
     canvasContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
   }
 
+  // Fluid Metallic Glass Background:
+  // Starts with the EXACT same dark obsidian background & metallic glass flow upon entering the gallery,
+  // then seamlessly transitions to white as the user scrolls horizontally through the gallery.
+  const isFluidActive = !isInSmartSection && (isHardwareVisible || tBg < 0.99);
   if (fluidCanvas) {
-    fluidCanvas.style.opacity = opacityStr;
-    fluidCanvas.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
+    const fluidOpacity = Math.max(0, 1.0 - tBg);
+    fluidCanvas.style.opacity = fluidOpacity.toFixed(3);
+    fluidCanvas.style.visibility = isFluidActive ? 'visible' : 'hidden';
   }
 
   isMainCanvasActive = isHardwareVisible && !isInSmartSection;
@@ -1318,11 +1327,25 @@ function update10kgDimensionOverlay(isActive, delta) {
 
 // 5. ANIMATION & TIMELINE TICK
 const clock = new THREE.Clock();
+let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+let lastScrollTime = typeof performance !== 'undefined' ? performance.now() : Date.now();
+let smoothedVelocity = 0.0;
 
 function animate() {
   requestAnimationFrame(animate);
   const rawDelta = clock.getDelta();
   const delta = Math.min(rawDelta, 0.05);
+
+  // Dynamic scroll velocity calculation for interactive liquid ribbon response
+  const now = performance.now();
+  const dt = Math.max(0.001, (now - lastScrollTime) / 1000);
+  lastScrollTime = now;
+
+  const currentScrollY = window.scrollY;
+  const rawVelocity = (currentScrollY - lastScrollY) / (Math.max(1, window.innerHeight) * dt);
+  lastScrollY = currentScrollY;
+
+  smoothedVelocity += (rawVelocity - smoothedVelocity) * Math.min(1.0, delta * 9.0);
 
   // Responsive lerp on mobile touch screens; smooth synchrony on desktop
   const scrollLerp = isMobileDevice ? 0.088 : 0.095;
@@ -1525,10 +1548,16 @@ function animate() {
     }
   }
 
-  if (isMainCanvasActive) {
-    if (fluidGlassController) {
-      fluidGlassController.render(clock.getElapsedTime(), smoothScroll);
+  // Render fluid metallic glass whenever not fully obscured by white gallery or Smart Control
+  if (fluidGlassController) {
+    const tBgVal = galBgLight ? parseFloat(galBgLight.style.opacity || '0') : 0;
+    const isFluidVisible = !isInSmartSection && tBgVal < 0.99;
+    if (isFluidVisible) {
+      fluidGlassController.render(clock.getElapsedTime(), smoothScroll, smoothedVelocity);
     }
+  }
+
+  if (isMainCanvasActive) {
     controls.update();
     renderer.render(scene, camera);
   }

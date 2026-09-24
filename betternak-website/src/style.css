@@ -820,17 +820,14 @@ body {
   background: transparent;
 }
 
-/* Background Crossfade Layers: Exactly matches cinema dark, then transitions seamlessly to ivory white */
+/* Background Crossfade Layers: Exactly matches cinema dark with fluid glass, then transitions seamlessly to ivory white */
 .gallery-bg-dark {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
-  background:
-    radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.09) 0%, transparent 55%),
-    radial-gradient(circle at 20% 70%, rgba(56, 189, 248, 0.06) 0%, transparent 60%),
-    radial-gradient(circle at 50% 25%, #162434 0%, #0c1520 45%, #06090d 100%);
+  background: transparent;
   pointer-events: none;
 }
 
@@ -843,7 +840,7 @@ body {
   background: #f8fafc;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.06s linear;
+  transition: opacity 0.08s linear;
 }
 
 .gallery-pin-container.bright-gallery-theme {
@@ -896,10 +893,10 @@ body {
 
 /* Bright Gallery Overrides (Active as user scrolls horizontally) */
 .bright-gallery-theme .gallery-intro-card h2 {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 .bright-gallery-theme .gallery-intro-card p {
-  color: #475569;
+  color: #475569 !important;
 }
 .bright-gallery-theme .gallery-intro-badge {
   background: rgba(16, 185, 129, 0.12);
