@@ -222,6 +222,8 @@ body {
   position: absolute;
   pointer-events: auto;
   transform: translate(0, -50%);
+  zoom: 0.7;
+  transform-origin: left center;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
   will-change: transform, opacity, left, top;
 }
@@ -298,6 +300,7 @@ body {
   opacity: 0;
   pointer-events: none;
   z-index: 30;
+  zoom: 0.7;
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
@@ -963,9 +966,9 @@ body {
 
 /* Gallery Intro Block */
 .gallery-intro-card {
-  width: 380px;
+  width: 266px;
   flex-shrink: 0;
-  margin-right: 52px;
+  margin-right: 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -974,13 +977,13 @@ body {
 .gallery-intro-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 14px;
+  gap: 6px;
+  padding: 4px 10px;
   border-radius: 9999px;
   background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(52, 211, 153, 0.35);
   color: #34d399;
-  font-size: 11px;
+  font-size: 8px;
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -992,7 +995,7 @@ body {
 .gallery-item {
   flex-shrink: 0;
   position: relative;
-  border-radius: 24px;
+  border-radius: 17px;
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 25px rgba(0, 0, 0, 0.5);
@@ -1001,7 +1004,7 @@ body {
 }
 
 .gallery-item:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-6px) scale(1.02);
   box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9), 0 0 35px rgba(16, 185, 129, 0.25);
   border-color: rgba(52, 211, 153, 0.4);
 }
@@ -1037,9 +1040,9 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 26px 22px;
+  padding: 18px 15px;
   display: flex;
-  gap: 16px;
+  gap: 11px;
   align-items: flex-end;
   pointer-events: none;
   background: none;
@@ -1056,53 +1059,53 @@ body {
 
 .gallery-tag {
   display: block;
-  font-size: 12px;
+  font-size: 8.5px;
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: #a7f3d0;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .gallery-title {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 800;
   color: #ffffff;
   line-height: 1.25;
 }
 
 .gallery-desc {
-  font-size: 14px;
+  font-size: 10px;
   color: #e2e8f0;
   line-height: 1.45;
-  margin-top: 4px;
+  margin-top: 3px;
   opacity: 0.95;
 }
 
 /* Varied Item Sizes & Staggered Offsets */
 .item-size-tall-1 {
-  width: 390px;
-  height: 560px;
+  width: 273px;
+  height: 392px;
   align-self: center;
-  margin-right: 56px;
+  margin-right: 39px;
 }
 
 .item-size-portrait-low {
-  width: 340px;
-  height: 490px;
+  width: 238px;
+  height: 343px;
   align-self: flex-end;
-  margin-bottom: 3.5rem;
-  margin-right: 120px; /* Big gap! */
+  margin-bottom: 2.5rem;
+  margin-right: 84px; /* Big gap! */
 }
 
 .gallery-interlude-quote {
-  width: 320px;
+  width: 224px;
   flex-shrink: 0;
-  margin-right: 120px; /* Big gap! */
+  margin-right: 84px; /* Big gap! */
   align-self: center;
   position: relative;
-  padding: 10px 0;
+  padding: 8px 0;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -1110,23 +1113,23 @@ body {
 }
 .quote-symbol {
   font-family: var(--font-display);
-  font-size: 54px;
+  font-size: 38px;
   line-height: 0.8;
   color: #10b981;
   opacity: 0.75;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .quote-text {
-  font-size: 18px;
+  font-size: 13px;
   color: #f8fafc;
   line-height: 1.65;
   font-style: italic;
 }
 .quote-author {
   display: block;
-  font-size: 13px;
+  font-size: 9.5px;
   color: #94a3b8;
-  margin-top: 10px;
+  margin-top: 7px;
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -1134,29 +1137,29 @@ body {
 }
 
 .item-size-portrait-high {
-  width: 410px;
-  height: 580px;
+  width: 287px;
+  height: 406px;
   align-self: flex-start;
-  margin-top: 3.5rem;
-  margin-right: 70px;
+  margin-top: 2.5rem;
+  margin-right: 49px;
 }
 
 
 /* Photo 4: Landscape Wide */
 .item-size-landscape-wide {
-  width: 580px;
-  height: 420px;
+  width: 406px;
+  height: 294px;
   align-self: center;
-  margin-right: 140px; /* Dramatic gap! */
+  margin-right: 98px; /* Dramatic gap! */
 }
 
 /* Interlude Stat between Photo 4 and 5 (No Box, Pure Typography) */
 .gallery-interlude-stat {
-  width: 260px;
+  width: 182px;
   flex-shrink: 0;
-  margin-right: 140px;
+  margin-right: 98px;
   align-self: center;
-  padding: 10px 0;
+  padding: 8px 0;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -1164,7 +1167,7 @@ body {
 }
 .stat-number {
   font-family: var(--font-display);
-  font-size: 64px;
+  font-size: 45px;
   font-weight: 900;
   color: #34d399;
   line-height: 1;
@@ -1172,42 +1175,42 @@ body {
 }
 .stat-label {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 11.5px;
   font-weight: 800;
   color: #ffffff;
-  margin-top: 8px;
+  margin-top: 6px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .stat-sub {
-  font-size: 14px;
+  font-size: 10px;
   color: #cbd5e1;
   line-height: 1.45;
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
 /* Photo 5: Cinematic Landscape */
 .item-size-cinematic {
-  width: 640px;
-  height: 450px;
+  width: 448px;
+  height: 315px;
   align-self: flex-end;
-  margin-bottom: 2.5rem;
-  margin-right: 80px;
+  margin-bottom: 1.75rem;
+  margin-right: 56px;
 }
 
 /* Photo 6: Tall Hero End */
 .item-size-tall-end {
-  width: 400px;
-  height: 580px;
+  width: 280px;
+  height: 406px;
   align-self: center;
-  margin-right: 90px;
+  margin-right: 63px;
 }
 
 /* Outro Card (No Box, Pure Typography) */
 .gallery-outro-card {
-  width: 360px;
+  width: 252px;
   flex-shrink: 0;
-  margin-right: 60px;
+  margin-right: 42px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1632,4 +1635,20 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* =========================================================================
+   30% REDUCTION FOR ALL WEBSITE CONTENT & UI (EXCEPT 3D FEATURE MODEL)
+   ========================================================================= */
+#loader-overlay .loader-content {
+  zoom: 0.7;
+}
+
+#smart-control-section > .max-w-7xl {
+  zoom: 0.7;
+}
+
+.betternak-footer > .max-w-7xl {
+  zoom: 0.7;
+}
+
 
