@@ -31,7 +31,7 @@ body {
   inset: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   opacity: 1;
   transition: opacity 0.4s ease;
@@ -45,10 +45,10 @@ body {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
   background:
-    radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 55%),
-    radial-gradient(circle at 20% 70%, rgba(56, 189, 248, 0.05) 0%, transparent 60%);
+    radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.09) 0%, transparent 55%),
+    radial-gradient(circle at 20% 70%, rgba(56, 189, 248, 0.06) 0%, transparent 60%);
 }
 
 #webgl-canvas-container {

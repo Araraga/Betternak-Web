@@ -46,14 +46,18 @@ function initFluidGlassBackground() {
   if (!canvas) return null;
 
   let gl = canvas.getContext('webgl', {
-    alpha: false,
-    antialias: false,
+    alpha: true,
+    premultipliedAlpha: true,
+    antialias: true,
     depth: false,
     stencil: false,
     powerPreference: 'high-performance'
   });
   if (!gl) {
-    gl = canvas.getContext('experimental-webgl');
+    gl = canvas.getContext('experimental-webgl', {
+      alpha: true,
+      premultipliedAlpha: true
+    });
   }
   if (!gl) return null;
 
@@ -71,77 +75,117 @@ function initFluidGlassBackground() {
     uniform float u_scroll;
 
     void main() {
-      vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-      
-      // Calibrated fluid water flow speed with subtle scroll responsiveness
-      float t = u_time * 0.24 + u_scroll * 1.6;
-      
-      // Multi-layer domain warping simulating viscous liquid glass/metal waves
-      vec2 q = p * 1.5;
-      for (int i = 1; i <= 3; i++) {
-        float fi = float(i);
-        q.x += 0.38 / fi * sin(fi * 2.1 * q.y + t * 0.7 + fi * 0.8);
-        q.y += 0.38 / fi * cos(fi * 1.9 * q.x - t * 0.6 + fi * 1.2);
+      vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+      uv.x *= 1.15;
+
+      // Looping fluid flow speed with subtle scroll responsiveness
+      float t = u_time * 0.32 + u_scroll * 1.5;
+
+      // Stream 1: Upper graceful fluid metallic glass ribbon
+      float w1 = 0.090 + 0.035 * sin(uv.x * 2.2 + t * 1.4);
+      float wave1 = sin(uv.x * 1.8 + t * 0.75) * 0.22 + cos(uv.x * 3.2 - t * 0.6) * 0.08;
+      float d1 = (uv.y - (0.16 + wave1)) / w1;
+
+      // Stream 2: Lower sweeping fluid metallic glass ribbon
+      float w2 = 0.080 + 0.030 * cos(uv.x * 2.5 - t * 1.1);
+      float wave2 = sin(uv.x * 1.6 - t * 0.65 + 1.2) * 0.25 + sin(uv.x * 3.6 + t * 0.85) * 0.06;
+      float d2 = (uv.y - (-0.24 + wave2)) / w2;
+
+      // Stream 3: Diagonal crossing liquid glass stream
+      float w3 = 0.060 + 0.025 * sin(uv.x * 2.8 + t * 1.2);
+      float wave3 = cos(uv.x * 1.9 + t * 0.5 - 0.7) * 0.28;
+      float d3 = (uv.y - (0.36 + wave3)) / w3;
+
+      // Stream 4: Subtle secondary ribbon in lower quadrant
+      float w4 = 0.055 + 0.020 * cos(uv.x * 3.1 - t * 0.9);
+      float wave4 = sin(uv.x * 2.2 - t * 0.8 - 1.5) * 0.20;
+      float d4 = (uv.y - (-0.42 + wave4)) / w4;
+
+      float ad1 = abs(d1);
+      float ad2 = abs(d2);
+      float ad3 = abs(d3);
+      float ad4 = abs(d4);
+
+      float in1 = smoothstep(1.0, 0.70, ad1);
+      float in2 = smoothstep(1.0, 0.70, ad2);
+      float in3 = smoothstep(1.0, 0.70, ad3);
+      float in4 = smoothstep(1.0, 0.70, ad4);
+
+      float alpha = max(in1, max(in2, max(in3, in4)));
+      if (alpha <= 0.002) {
+        gl_FragColor = vec4(0.0);
+        return;
       }
-      
-      // Liquid height field
-      float h = sin(q.x * 2.5 + t * 0.5) * cos(q.y * 2.3 - t * 0.4);
-      h += 0.40 * sin(length(q) * 3.5 - t * 0.8);
-      
-      // Surface normal via finite differences
-      float eps = 0.006;
-      vec2 qR = (p + vec2(eps, 0.0)) * 1.5;
-      for (int i = 1; i <= 3; i++) {
-        float fi = float(i);
-        qR.x += 0.38 / fi * sin(fi * 2.1 * qR.y + t * 0.7 + fi * 0.8);
-        qR.y += 0.38 / fi * cos(fi * 1.9 * qR.x - t * 0.6 + fi * 1.2);
+
+      // Cross-sectional parabolic curvature for 3D liquid tube volume
+      float h1 = in1 > 0.0 ? sqrt(max(0.0, 1.0 - ad1 * ad1)) : 0.0;
+      float h2 = in2 > 0.0 ? sqrt(max(0.0, 1.0 - ad2 * ad2)) : 0.0;
+      float h3 = in3 > 0.0 ? sqrt(max(0.0, 1.0 - ad3 * ad3)) : 0.0;
+      float h4 = in4 > 0.0 ? sqrt(max(0.0, 1.0 - ad4 * ad4)) : 0.0;
+
+      // Surface ripples traveling along the fluid streams
+      float rip1 = sin(uv.x * 14.0 - t * 4.2 + d1 * 4.5) * 0.14 * h1;
+      float rip2 = cos(uv.x * 12.0 + t * 3.8 + d2 * 4.2) * 0.14 * h2;
+      float rip3 = sin(uv.x * 16.0 - t * 5.0 + d3 * 4.5) * 0.14 * h3;
+      float rip4 = cos(uv.x * 15.0 + t * 4.0 + d4 * 4.0) * 0.14 * h4;
+
+      float totalH = max(h1 + rip1, max(h2 + rip2, max(h3 + rip3, h4 + rip4)));
+
+      // Surface normal approximation
+      float dHdx = 0.0;
+      float dHdy = 0.0;
+      if (in1 > 0.0) {
+        dHdy += -d1 * 2.5 / max(0.1, h1);
+        dHdx += (cos(uv.x * 1.8 + t * 0.75) * 0.39) * 1.5;
       }
-      float hR = sin(qR.x * 2.5 + t * 0.5) * cos(qR.y * 2.3 - t * 0.4) + 0.40 * sin(length(qR) * 3.5 - t * 0.8);
-      
-      vec2 qU = (p + vec2(0.0, eps)) * 1.5;
-      for (int i = 1; i <= 3; i++) {
-        float fi = float(i);
-        qU.x += 0.38 / fi * sin(fi * 2.1 * qU.y + t * 0.7 + fi * 0.8);
-        qU.y += 0.38 / fi * cos(fi * 1.9 * qU.x - t * 0.6 + fi * 1.2);
+      if (in2 > 0.0) {
+        dHdy += -d2 * 2.5 / max(0.1, h2);
+        dHdx += (cos(uv.x * 1.6 - t * 0.65 + 1.2) * 0.39) * 1.5;
       }
-      float hU = sin(qU.x * 2.5 + t * 0.5) * cos(qU.y * 2.3 - t * 0.4) + 0.40 * sin(length(qU) * 3.5 - t * 0.8);
-      
-      vec3 N = normalize(vec3((h - hR) * 11.0, (h - hU) * 11.0, 1.0));
+      if (in3 > 0.0) {
+        dHdy += -d3 * 2.5 / max(0.1, h3);
+        dHdx += (-sin(uv.x * 1.9 + t * 0.5 - 0.7) * 0.53) * 1.5;
+      }
+      if (in4 > 0.0) {
+        dHdy += -d4 * 2.5 / max(0.1, h4);
+        dHdx += (cos(uv.x * 2.2 - t * 0.8 - 1.5) * 0.44) * 1.5;
+      }
+
+      vec3 N = normalize(vec3(dHdx * 0.85, dHdy * 0.85, 1.0));
       vec3 V = vec3(0.0, 0.0, 1.0);
-      
-      // Metallic reflection highlights
-      vec3 L_silver = normalize(vec3(-0.4, 0.7, 0.75));
-      vec3 L_emerald = normalize(vec3(0.65, -0.35, 0.6));
-      vec3 L_cyan = normalize(vec3(0.15, 0.85, 0.55));
-      
-      float specSilver = pow(max(0.0, dot(N, normalize(L_silver + V))), 32.0);
+
+      // Specular studio lights (Platinum Silver, Emerald Sheen, Cyan Glint)
+      vec3 L_silver = normalize(vec3(-0.45, 0.75, 0.7));
+      vec3 L_emerald = normalize(vec3(0.65, -0.40, 0.6));
+      vec3 L_cyan = normalize(vec3(0.20, 0.85, 0.5));
+
+      float specSilver = pow(max(0.0, dot(N, normalize(L_silver + V))), 36.0);
       float specEmerald = pow(max(0.0, dot(N, normalize(L_emerald + V))), 26.0);
-      float specCyan = pow(max(0.0, dot(N, normalize(L_cyan + V))), 22.0);
-      
-      // Glass edge Fresnel sheen
-      float fresnel = pow(1.0 - max(0.0, dot(N, V)), 2.6);
-      
-      // Water caustic flow ripples
-      float caustic = pow(max(0.0, sin(q.x * 3.2 + q.y * 3.2 + t * 1.3)), 5.0) * 0.30;
-      
-      // Color palette: Obsidian Liquid Glass + Platinum Chrome + Emerald Sheen
-      vec3 colBase = vec3(0.045, 0.075, 0.11);
-      vec3 colSilver = vec3(0.78, 0.85, 0.94);
-      vec3 colEmerald = vec3(0.10, 0.76, 0.52);
-      vec3 colCyan = vec3(0.15, 0.68, 0.90);
-      
-      vec3 col = colBase;
-      col += vec3(0.06, 0.11, 0.15) * (h * 0.5 + 0.5);
-      col += colSilver * (specSilver * 0.80);
-      col += colEmerald * (specEmerald * 0.70);
-      col += colCyan * (specCyan * 0.45);
-      col += mix(colSilver, colCyan, 0.35) * (fresnel * 0.40);
-      col += colEmerald * caustic;
-      
-      float vig = 1.0 - smoothstep(0.4, 1.4, length(p));
-      col *= (0.75 + 0.25 * vig);
-      
-      gl_FragColor = vec4(col, 1.0);
+      float specCyan = pow(max(0.0, dot(N, normalize(L_cyan + V))), 28.0);
+
+      // Fresnel refraction on glass ribbon edges
+      float fresnel = pow(1.0 - max(0.0, dot(N, V)), 2.8);
+
+      // Fluid glass metallic color palette
+      vec3 colSilver = vec3(0.92, 0.96, 1.0);
+      vec3 colEmerald = vec3(0.12, 0.82, 0.56);
+      vec3 colCyan = vec3(0.22, 0.76, 0.95);
+      vec3 colGlassBody = vec3(0.06, 0.16, 0.20);
+
+      vec3 streamCol = colGlassBody * (0.30 + 0.70 * totalH);
+      streamCol += colSilver * (specSilver * 1.15);
+      streamCol += colEmerald * (specEmerald * 0.90);
+      streamCol += colCyan * (specCyan * 0.75);
+      streamCol += mix(colSilver, colCyan, 0.35) * (fresnel * 0.90);
+
+      // Caustic flow within the fluid glass
+      float caustic = pow(max(0.0, sin((uv.x + uv.y) * 14.0 + t * 3.2)), 5.0) * 0.35;
+      streamCol += colEmerald * caustic;
+
+      // Smooth alpha fade
+      float finalAlpha = alpha * 0.85;
+
+      gl_FragColor = vec4(streamCol * finalAlpha, finalAlpha);
     }
   `;
 
@@ -199,6 +243,8 @@ function initFluidGlassBackground() {
 
   return {
     render(time, scroll) {
+      gl.clearColor(0.0, 0.0, 0.0, 0.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, time);

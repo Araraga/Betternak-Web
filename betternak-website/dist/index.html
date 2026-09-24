@@ -8,97 +8,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module" crossorigin src="./assets/index-DMyuQu1T.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-vmes8GL2.css">
+  <script type="module" crossorigin src="./assets/index-DekICPev.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Btt8lDZh.css">
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-white">
 
-  <!-- Fluid Metallic Glass Looping Flow Background (Features Section) -->
-  <canvas id="fluid-glass-canvas" class="fluid-glass-canvas"></canvas>
-
-  <!-- Cinematic Ambient Background Glow & Tech Animated Lines -->
+  <!-- Cinematic Ambient Background Glow -->
   <div class="cinema-ambient-glow"></div>
   <div class="cinema-lines-bg">
     <div class="tech-grid-pattern"></div>
-    <svg class="cyber-laser-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <!-- Emerald to Cyan horizontal wave gradient -->
-        <linearGradient id="laserGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#10b981" stop-opacity="0" />
-          <stop offset="25%" stop-color="#10b981" stop-opacity="0.45" />
-          <stop offset="70%" stop-color="#38bdf8" stop-opacity="0.55" />
-          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
-        </linearGradient>
-
-        <!-- Vertical scanline gradient -->
-        <linearGradient id="laserGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0" />
-          <stop offset="50%" stop-color="#10b981" stop-opacity="0.4" />
-          <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
-        </linearGradient>
-
-        <!-- Violet to Emerald gradient for dynamic resonance -->
-        <linearGradient id="laserGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#a855f7" stop-opacity="0" />
-          <stop offset="30%" stop-color="#a855f7" stop-opacity="0.35" />
-          <stop offset="75%" stop-color="#10b981" stop-opacity="0.45" />
-          <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
-        </linearGradient>
-
-        <!-- Amber to Cyan accent gradient -->
-        <linearGradient id="laserGrad4" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0" />
-          <stop offset="40%" stop-color="#f59e0b" stop-opacity="0.4" />
-          <stop offset="70%" stop-color="#06b6d4" stop-opacity="0.45" />
-          <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
-        </linearGradient>
-
-        <!-- Glow filter for lasers -->
-        <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="2.5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      <!-- 1. Multi-tier animated flowing cyber wave lines -->
-      <path class="cyber-laser-line line-flow-1" d="M -100,160 Q 420,60 920,180 T 1940,110 T 2500,170" stroke="url(#laserGrad1)" fill="none" stroke-width="1.8" filter="url(#laserGlow)" />
-      <path class="cyber-laser-line line-flow-2" d="M -150,340 Q 520,220 1050,360 T 2050,280 T 2600,350" stroke="url(#laserGrad3)" fill="none" stroke-width="1.6" />
-      <path class="cyber-laser-line line-flow-3" d="M -100,640 Q 480,500 1100,660 T 2120,580 T 2700,650" stroke="url(#laserGrad1)" fill="none" stroke-width="1.5" />
-      <path class="cyber-laser-line line-flow-4" d="M -200,860 Q 600,740 1200,880 T 2200,810 T 2800,870" stroke="url(#laserGrad4)" fill="none" stroke-width="1.6" filter="url(#laserGlow)" />
-      
-      <!-- 2. Diagonal telemetry beams -->
-      <line class="cyber-diag-line line-diag-1" x1="-100" y1="80" x2="2100" y2="920" stroke="url(#laserGrad3)" stroke-width="1.2" stroke-dasharray="140 280" />
-      <line class="cyber-diag-line line-diag-2" x1="-100" y1="850" x2="2100" y2="120" stroke="url(#laserGrad4)" stroke-width="1.2" stroke-dasharray="160 300" />
-
-      <!-- 3. Vertical telemetry coordinate scanlines -->
-      <line class="cyber-scanline scanline-1" x1="14%" y1="0" x2="14%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="6 6" />
-      <line class="cyber-scanline scanline-2" x1="33%" y1="0" x2="33%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="8 8" />
-      <line class="cyber-scanline scanline-3" x1="67%" y1="0" x2="67%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="8 8" />
-      <line class="cyber-scanline scanline-4" x1="86%" y1="0" x2="86%" y2="100%" stroke="url(#laserGrad2)" stroke-width="1" stroke-dasharray="6 6" />
-
-      <!-- 4. Horizontal datum reference guides -->
-      <line class="cyber-datum datum-1" x1="0" y1="260" x2="100%" y2="260" stroke="rgba(56,189,248,0.12)" stroke-width="1" stroke-dasharray="4 12" />
-      <line class="cyber-datum datum-2" x1="0" y1="540" x2="100%" y2="540" stroke="rgba(16,185,129,0.12)" stroke-width="1" stroke-dasharray="4 12" />
-      <line class="cyber-datum datum-3" x1="0" y1="820" x2="100%" y2="820" stroke="rgba(168,85,247,0.12)" stroke-width="1" stroke-dasharray="4 12" />
-
-      <!-- 5. Rotating Tech Radar Circles / Reticle Rings in Corners -->
-      <g class="tech-radar-reticle reticle-tr" transform="translate(1820, 100)">
-        <circle r="64" fill="none" stroke="rgba(16,185,129,0.18)" stroke-width="1" stroke-dasharray="8 12" />
-        <circle r="36" fill="none" stroke="rgba(56,189,248,0.22)" stroke-width="1" stroke-dasharray="4 6" />
-        <line x1="-74" y1="0" x2="74" y2="0" stroke="rgba(16,185,129,0.2)" stroke-width="1" />
-        <line x1="0" y1="-74" x2="0" y2="74" stroke="rgba(16,185,129,0.2)" stroke-width="1" />
-      </g>
-      <g class="tech-radar-reticle reticle-bl" transform="translate(100, 980)">
-        <circle r="72" fill="none" stroke="rgba(56,189,248,0.18)" stroke-width="1" stroke-dasharray="10 14" />
-        <circle r="42" fill="none" stroke="rgba(168,85,247,0.2)" stroke-width="1" stroke-dasharray="5 7" />
-        <line x1="-80" y1="0" x2="80" y2="0" stroke="rgba(56,189,248,0.2)" stroke-width="1" />
-        <line x1="0" y1="-80" x2="0" y2="80" stroke="rgba(56,189,248,0.2)" stroke-width="1" />
-      </g>
-    </svg>
   </div>
+
+  <!-- Fluid Metallic Glass Looping Flow Background (Replaces previous moving lines) -->
+  <canvas id="fluid-glass-canvas" class="fluid-glass-canvas"></canvas>
 
   <!-- 3D Three.js WebGL Container -->
   <div id="webgl-canvas-container"></div>
