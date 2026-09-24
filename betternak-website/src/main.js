@@ -626,6 +626,138 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 updateScrollProgress();
 
+// =========================================================================
+// CINEMATIC SMOOTH SCROLL ENGINE (LEBIH HALUS, LEBIH LAMBAT & ADA BATAS KECEPATAN)
+// =========================================================================
+class CinematicSmoothScroll {
+  constructor(options = {}) {
+    // 1. LEBIH LAMBAT: 50% multiplier membuat rotasi & pergerakan 3D tenang dan teratur
+    this.speedMultiplier = options.speedMultiplier ?? 0.50;
+    // 2. BATAS KECEPATAN: Maksimum 85px per wheel event mencegah scroll melompat drastis
+    this.maxVelocity = options.maxVelocity ?? 85;
+    // 3. LEBIH HALUS: Easing lerp 0.075 memberikan inersia mentega tanpa lagging
+    this.lerp = options.lerp ?? 0.075;
+
+    this.targetY = window.scrollY;
+    this.currentY = window.scrollY;
+    this.isTicking = false;
+    this.isProgrammatic = false;
+
+    this.init();
+  }
+
+  init() {
+    window.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
+    window.addEventListener('scroll', () => this.onNativeScroll(), { passive: true });
+    window.addEventListener('keydown', (e) => this.onKeyDown(e));
+  }
+
+  isInsideScrollable(el) {
+    let cur = el;
+    while (cur && cur !== document.body && cur !== document.documentElement) {
+      const style = window.getComputedStyle(cur);
+      const overflowY = style.overflowY;
+      if ((overflowY === 'auto' || overflowY === 'scroll') && cur.scrollHeight > cur.clientHeight) {
+        return true;
+      }
+      cur = cur.parentElement;
+    }
+    return false;
+  }
+
+  onWheel(e) {
+    // Biarkan scroll di dalam modal atau picker jadwal aplikasi berjalan lokal
+    if (this.isInsideScrollable(e.target)) return;
+
+    e.preventDefault();
+
+    let rawDelta = e.deltaY;
+    if (e.deltaMode === 1) rawDelta *= 24;      // Lines mode (Firefox)
+    else if (e.deltaMode === 2) rawDelta *= 400; // Pages mode
+
+    // 1. LEBIH LAMBAT: Penskalaan jarak scroll per putaran roda mouse
+    let delta = rawDelta * this.speedMultiplier;
+
+    // 2. BATAS KECEPATAN: Membatasi kecepatan agar tidak bisa melompat terlalu cepat
+    delta = Math.max(-this.maxVelocity, Math.min(this.maxVelocity, delta));
+
+    // 3. Akumulasi posisi target dalam batas dokumen
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    this.targetY = Math.max(0, Math.min(maxScroll, this.targetY + delta));
+
+    this.startLoop();
+  }
+
+  onKeyDown(e) {
+    const active = document.activeElement?.tagName?.toLowerCase();
+    if (active === 'input' || active === 'textarea' || active === 'select') return;
+
+    let step = 0;
+    if (e.code === 'ArrowDown') step = 70;
+    else if (e.code === 'ArrowUp') step = -70;
+    else if (e.code === 'PageDown' || (e.code === 'Space' && !e.shiftKey)) step = window.innerHeight * 0.65;
+    else if (e.code === 'PageUp' || (e.code === 'Space' && e.shiftKey)) step = -window.innerHeight * 0.65;
+
+    if (step !== 0) {
+      e.preventDefault();
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      this.targetY = Math.max(0, Math.min(maxScroll, this.targetY + step * this.speedMultiplier));
+      this.startLoop();
+    }
+  }
+
+  onNativeScroll() {
+    if (this.isTicking) {
+      // Jika posisi scroll melenceng jauh dari animasi, artinya user menarik scrollbar
+      if (Math.abs(window.scrollY - this.currentY) > 100) {
+        this.targetY = window.scrollY;
+        this.currentY = window.scrollY;
+        this.isTicking = false;
+      }
+      return;
+    }
+    // Mengikuti saat user menarik scrollbar native secara manual ketika idle
+    this.targetY = window.scrollY;
+    this.currentY = window.scrollY;
+  }
+
+  startLoop() {
+    if (this.isTicking) return;
+    this.isTicking = true;
+    requestAnimationFrame(() => this.tick());
+  }
+
+  tick() {
+    const diff = this.targetY - this.currentY;
+
+    if (Math.abs(diff) < 0.5) {
+      this.currentY = this.targetY;
+      window.scrollTo(0, this.currentY);
+      this.isTicking = false;
+      return;
+    }
+
+    // LEBIH HALUS: Interpolasi lerp kurva halus
+    this.currentY += diff * this.lerp;
+    window.scrollTo(0, this.currentY);
+
+    requestAnimationFrame(() => this.tick());
+  }
+
+  scrollTo(targetY) {
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    this.targetY = Math.max(0, Math.min(maxScroll, targetY));
+    this.startLoop();
+  }
+}
+
+const smoothScroller = new CinematicSmoothScroll({
+  speedMultiplier: 0.50, // 50% lebih lambat
+  maxVelocity: 85,       // Maksimum kecepatan 85px per tick
+  lerp: 0.075            // Easing ultra halus
+});
+window.__smoothScroller = smoothScroller;
+
 // Dynamic Slicing control (facing front camera)
 let currentSlice = 0.0;
 function updateSlicing(val) {
@@ -954,8 +1086,8 @@ function animate() {
   const rawDelta = clock.getDelta();
   const delta = Math.min(rawDelta, 0.05);
 
-  // Responsive lerp on mobile touch screens for instantaneous feel; velvety smooth on desktop
-  const scrollLerp = isMobileDevice ? 0.088 : 0.058;
+  // Responsive lerp on mobile touch screens; smooth synchrony on desktop
+  const scrollLerp = isMobileDevice ? 0.088 : 0.095;
   smoothScroll += (targetScroll - smoothScroll) * scrollLerp;
   if (Math.abs(targetScroll - smoothScroll) < 0.0002) {
     smoothScroll = targetScroll;
@@ -1167,7 +1299,11 @@ function scrollToProgress(p) {
   const storyTrack = document.getElementById('story-scroll-track');
   if (storyTrack) {
     const maxStoryScroll = storyTrack.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: maxStoryScroll * p, behavior: 'smooth' });
+    if (window.__smoothScroller) {
+      window.__smoothScroller.scrollTo(maxStoryScroll * p);
+    } else {
+      window.scrollTo({ top: maxStoryScroll * p, behavior: 'smooth' });
+    }
   }
 }
 
