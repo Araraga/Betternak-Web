@@ -330,13 +330,13 @@ const LEG_ATTACH_OFFSET = 0.73;
 
 const partsData = [
   { id: 'part8_kaki', name: 'Kaki Tripod Modular', explodeY: 0.0, mesh: null, origY: LEG_ATTACH_OFFSET },
-  { id: 'part7_bawah', name: 'Mangkuk Feeder Anti-Tumpah', explodeY: 0.55, mesh: null, origY: 0 },
-  { id: 'part6_nemabracket', name: 'Bracket Motor NEMA', explodeY: 1.20, mesh: null, origY: 0 },
-  { id: 'part5_piramid', name: 'Piramid 360° Deflektor', explodeY: 1.90, mesh: null, origY: 0 },
-  { id: 'part4_sisibawah', name: 'Chute Body Bawah', explodeY: 2.70, mesh: null, origY: 0 },
-  { id: 'part3_piring', name: 'Piringan Dosing Presisi', explodeY: 3.50, mesh: null, origY: 0 },
-  { id: 'part2_sisiatas', name: 'Silo Pakan 10kg', explodeY: 4.50, mesh: null, origY: 0 },
-  { id: 'part1_tutup', name: 'Tutup Kedap Cuaca', explodeY: 5.60, mesh: null, origY: 0 }
+  { id: 'part7_bawah', name: 'Mangkuk Feeder Anti-Tumpah', explodeY: 0.65, mesh: null, origY: 0 },
+  { id: 'part6_nemabracket', name: 'Bracket Motor NEMA', explodeY: 1.45, mesh: null, origY: 0 },
+  { id: 'part5_piramid', name: 'Piramid 360° Deflektor', explodeY: 2.25, mesh: null, origY: 0 },
+  { id: 'part4_sisibawah', name: 'Chute Body Bawah', explodeY: 3.10, mesh: null, origY: 0 },
+  { id: 'part3_piring', name: 'Piringan Dosing Presisi', explodeY: 4.00, mesh: null, origY: 0 },
+  { id: 'part2_sisiatas', name: 'Silo Pakan 10kg', explodeY: 5.05, mesh: null, origY: 0 },
+  { id: 'part1_tutup', name: 'Tutup Kedap Cuaca', explodeY: 6.15, mesh: null, origY: 0 }
 ];
 
 let isModelLoaded = false;
