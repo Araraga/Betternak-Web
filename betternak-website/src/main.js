@@ -38,6 +38,177 @@ renderer.localClippingEnabled = true;
 renderer.domElement.style.touchAction = 'pan-y';
 container.appendChild(renderer.domElement);
 
+// =========================================================================
+// FLUID METALLIC GLASS FLOWING BACKGROUND (LOOPING WATER FLOW SHADER)
+// =========================================================================
+function initFluidGlassBackground() {
+  const canvas = document.getElementById('fluid-glass-canvas');
+  if (!canvas) return null;
+
+  let gl = canvas.getContext('webgl', {
+    alpha: false,
+    antialias: false,
+    depth: false,
+    stencil: false,
+    powerPreference: 'high-performance'
+  });
+  if (!gl) {
+    gl = canvas.getContext('experimental-webgl');
+  }
+  if (!gl) return null;
+
+  const vsSource = `
+    attribute vec2 position;
+    void main() {
+      gl_Position = vec4(position, 0.0, 1.0);
+    }
+  `;
+
+  const fsSource = `
+    precision highp float;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform float u_scroll;
+
+    void main() {
+      vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+      
+      // Calibrated fluid water flow speed with subtle scroll responsiveness
+      float t = u_time * 0.24 + u_scroll * 1.6;
+      
+      // Multi-layer domain warping simulating viscous liquid glass/metal waves
+      vec2 q = p * 1.5;
+      for (int i = 1; i <= 3; i++) {
+        float fi = float(i);
+        q.x += 0.38 / fi * sin(fi * 2.1 * q.y + t * 0.7 + fi * 0.8);
+        q.y += 0.38 / fi * cos(fi * 1.9 * q.x - t * 0.6 + fi * 1.2);
+      }
+      
+      // Liquid height field
+      float h = sin(q.x * 2.5 + t * 0.5) * cos(q.y * 2.3 - t * 0.4);
+      h += 0.40 * sin(length(q) * 3.5 - t * 0.8);
+      
+      // Surface normal via finite differences
+      float eps = 0.006;
+      vec2 qR = (p + vec2(eps, 0.0)) * 1.5;
+      for (int i = 1; i <= 3; i++) {
+        float fi = float(i);
+        qR.x += 0.38 / fi * sin(fi * 2.1 * qR.y + t * 0.7 + fi * 0.8);
+        qR.y += 0.38 / fi * cos(fi * 1.9 * qR.x - t * 0.6 + fi * 1.2);
+      }
+      float hR = sin(qR.x * 2.5 + t * 0.5) * cos(qR.y * 2.3 - t * 0.4) + 0.40 * sin(length(qR) * 3.5 - t * 0.8);
+      
+      vec2 qU = (p + vec2(0.0, eps)) * 1.5;
+      for (int i = 1; i <= 3; i++) {
+        float fi = float(i);
+        qU.x += 0.38 / fi * sin(fi * 2.1 * qU.y + t * 0.7 + fi * 0.8);
+        qU.y += 0.38 / fi * cos(fi * 1.9 * qU.x - t * 0.6 + fi * 1.2);
+      }
+      float hU = sin(qU.x * 2.5 + t * 0.5) * cos(qU.y * 2.3 - t * 0.4) + 0.40 * sin(length(qU) * 3.5 - t * 0.8);
+      
+      vec3 N = normalize(vec3((h - hR) * 11.0, (h - hU) * 11.0, 1.0));
+      vec3 V = vec3(0.0, 0.0, 1.0);
+      
+      // Metallic reflection highlights
+      vec3 L_silver = normalize(vec3(-0.4, 0.7, 0.75));
+      vec3 L_emerald = normalize(vec3(0.65, -0.35, 0.6));
+      vec3 L_cyan = normalize(vec3(0.15, 0.85, 0.55));
+      
+      float specSilver = pow(max(0.0, dot(N, normalize(L_silver + V))), 32.0);
+      float specEmerald = pow(max(0.0, dot(N, normalize(L_emerald + V))), 26.0);
+      float specCyan = pow(max(0.0, dot(N, normalize(L_cyan + V))), 22.0);
+      
+      // Glass edge Fresnel sheen
+      float fresnel = pow(1.0 - max(0.0, dot(N, V)), 2.6);
+      
+      // Water caustic flow ripples
+      float caustic = pow(max(0.0, sin(q.x * 3.2 + q.y * 3.2 + t * 1.3)), 5.0) * 0.30;
+      
+      // Color palette: Obsidian Liquid Glass + Platinum Chrome + Emerald Sheen
+      vec3 colBase = vec3(0.045, 0.075, 0.11);
+      vec3 colSilver = vec3(0.78, 0.85, 0.94);
+      vec3 colEmerald = vec3(0.10, 0.76, 0.52);
+      vec3 colCyan = vec3(0.15, 0.68, 0.90);
+      
+      vec3 col = colBase;
+      col += vec3(0.06, 0.11, 0.15) * (h * 0.5 + 0.5);
+      col += colSilver * (specSilver * 0.80);
+      col += colEmerald * (specEmerald * 0.70);
+      col += colCyan * (specCyan * 0.45);
+      col += mix(colSilver, colCyan, 0.35) * (fresnel * 0.40);
+      col += colEmerald * caustic;
+      
+      float vig = 1.0 - smoothstep(0.4, 1.4, length(p));
+      col *= (0.75 + 0.25 * vig);
+      
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  function compileShader(type, source) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, source);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.warn('Fluid glass shader error:', gl.getShaderInfoLog(s));
+      gl.deleteShader(s);
+      return null;
+    }
+    return s;
+  }
+
+  const prog = gl.createProgram();
+  const vs = compileShader(gl.VERTEX_SHADER, vsSource);
+  const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
+  if (!vs || !fs) return null;
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.warn('Fluid glass link error:', gl.getProgramInfoLog(prog));
+    return null;
+  }
+
+  const quadBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -1, -1,  1, -1, -1,  1,
+    -1,  1,  1, -1,  1,  1
+  ]), gl.STATIC_DRAW);
+
+  const posAttr = gl.getAttribLocation(prog, 'position');
+  gl.enableVertexAttribArray(posAttr);
+  gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
+
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uScroll = gl.getUniformLocation(prog, 'u_scroll');
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    const w = Math.floor(window.innerWidth * dpr);
+    const h = Math.floor(window.innerHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  return {
+    render(time, scroll) {
+      gl.useProgram(prog);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, time);
+      gl.uniform1f(uScroll, scroll);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+  };
+}
+const fluidGlassController = initFluidGlassBackground();
+
 // Controls with zoom disabled so scroll operates anywhere on screen seamlessly
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -526,6 +697,7 @@ const galPin = document.getElementById('gallery-pin-container');
 const galTrack = document.getElementById('gallery-track');
 const smartSec = document.getElementById('smart-control-section');
 const canvasContainer = document.getElementById('webgl-canvas-container');
+const fluidCanvas = document.getElementById('fluid-glass-canvas');
 const storyCardsContainer = document.getElementById('story-cards-container');
 const galBgLight = document.getElementById('gallery-bg-light');
 
@@ -598,6 +770,11 @@ function updateGalleryScroll() {
     canvasContainer.style.opacity = opacityStr;
     canvasContainer.style.pointerEvents = hardwareExitOpacity > 0.20 ? 'auto' : 'none';
     canvasContainer.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
+  }
+
+  if (fluidCanvas) {
+    fluidCanvas.style.opacity = opacityStr;
+    fluidCanvas.style.visibility = isHardwareVisible ? 'visible' : 'hidden';
   }
 
   isMainCanvasActive = isHardwareVisible && !isInSmartSection;
@@ -1037,17 +1214,17 @@ function update10kgDimensionOverlay(isActive, delta) {
     dimLineMain.style.opacity = `${Math.min(1.0, dimAnimProgress * 1.5)}`;
   }
   if (dimTickTop) {
-    dimTickTop.setAttribute('x1', topX - 18 * dimAnimProgress);
+    dimTickTop.setAttribute('x1', topX - 16 * dimAnimProgress);
     dimTickTop.setAttribute('y1', topY);
-    dimTickTop.setAttribute('x2', topX + 24 * dimAnimProgress);
+    dimTickTop.setAttribute('x2', topX + 16 * dimAnimProgress);
     dimTickTop.setAttribute('y2', topY);
     dimTickTop.style.opacity = `${Math.min(1.0, dimAnimProgress * 2)}`;
   }
   if (dimTickBottom) {
     const bottomTickFade = Math.max(0, (dimAnimProgress - 0.6) / 0.4);
-    dimTickBottom.setAttribute('x1', currentBotX - 18 * bottomTickFade);
+    dimTickBottom.setAttribute('x1', currentBotX - 16 * bottomTickFade);
     dimTickBottom.setAttribute('y1', currentBotY);
-    dimTickBottom.setAttribute('x2', currentBotX + 24 * bottomTickFade);
+    dimTickBottom.setAttribute('x2', currentBotX + 16 * bottomTickFade);
     dimTickBottom.setAttribute('y2', currentBotY);
     dimTickBottom.style.opacity = `${bottomTickFade}`;
   }
@@ -1061,18 +1238,33 @@ function update10kgDimensionOverlay(isActive, delta) {
     dimPointBottom.setAttribute('cy', currentBotY);
     dimPointBottom.style.opacity = `${Math.max(0, (dimAnimProgress - 0.4) / 0.6)}`;
   }
+  const midX = (topX + currentBotX) / 2;
+  const midY = (topY + currentBotY) / 2;
+
+  const dimTickMid = document.getElementById('dim-tick-mid');
+  if (dimTickMid) {
+    const leaderFade = Math.max(0, (dimAnimProgress - 0.25) / 0.75);
+    dimTickMid.setAttribute('x1', midX);
+    dimTickMid.setAttribute('y1', midY);
+    dimTickMid.setAttribute('x2', midX + 12 * leaderFade);
+    dimTickMid.setAttribute('y2', midY);
+    dimTickMid.style.opacity = `${leaderFade}`;
+  }
+
   if (dimLabel) {
-    const midX = (topX + currentBotX) / 2;
-    const midY = (topY + currentBotY) / 2;
     const badgeFade = Math.max(0, (dimAnimProgress - 0.15) / 0.85);
-    dimLabel.style.left = `${midX + 22}px`;
+    dimLabel.style.left = `${midX + 12}px`;
     dimLabel.style.top = `${midY}px`;
     dimLabel.style.opacity = `${badgeFade}`;
-    dimLabel.style.transform = `translate(0, -50%) scale(${0.80 + 0.20 * badgeFade})`;
+    dimLabel.style.transform = `translate(0, -50%) scale(${0.85 + 0.15 * badgeFade})`;
 
     const weightNumEl = document.getElementById('dim-weight-num');
     if (weightNumEl) {
-      weightNumEl.textContent = (dimAnimProgress * 10.0).toFixed(1);
+      if (dimAnimProgress > 0.96) {
+        weightNumEl.textContent = '10.0';
+      } else {
+        weightNumEl.textContent = (dimAnimProgress * 10.0).toFixed(1);
+      }
     }
   }
 }
@@ -1288,6 +1480,9 @@ function animate() {
   }
 
   if (isMainCanvasActive) {
+    if (fluidGlassController) {
+      fluidGlassController.render(clock.getElapsedTime(), smoothScroll);
+    }
     controls.update();
     renderer.render(scene, camera);
   }

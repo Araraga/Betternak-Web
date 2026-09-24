@@ -25,6 +25,19 @@ body {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.35); border-radius: 999px; }
 
+/* Fluid Metallic Glass Flow Background (Features Section) */
+.fluid-glass-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+
 /* Cinematic Ambient Studio Glow */
 .cinema-ambient-glow {
   position: fixed;
@@ -34,8 +47,8 @@ body {
   pointer-events: none;
   z-index: 2;
   background:
-    radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.09) 0%, transparent 55%),
-    radial-gradient(circle at 20% 70%, rgba(56, 189, 248, 0.06) 0%, transparent 60%);
+    radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 55%),
+    radial-gradient(circle at 20% 70%, rgba(56, 189, 248, 0.05) 0%, transparent 60%);
 }
 
 #webgl-canvas-container {
@@ -222,7 +235,6 @@ body {
   position: absolute;
   pointer-events: auto;
   transform: translate(0, -50%);
-  zoom: 0.7;
   transform-origin: left center;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
   will-change: transform, opacity, left, top;
@@ -235,6 +247,8 @@ body {
   box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.85), 0 0 28px rgba(16, 185, 129, 0.25);
   padding: 8px 14px;
   border-radius: 16px;
+  zoom: 0.7;
+  transform-origin: left center;
 }
 
 /* Glassmorphic UI Panels with low frost & low opacity white */
